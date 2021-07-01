@@ -1,0 +1,173 @@
+html {
+  --bg-color: #2c3e50;
+  --nav-bg-color: #2f495e;
+  --nav-text-color: #fff;
+  --text-color: #b8c2cc;
+  --accent-color: #00c58e;
+  --hover-bg-color: #203241;
+  --main-title-color: #f5f7fa;
+}
+
+/* RESETS */
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+h1,
+h2 {
+  margin: 0;
+}
+
+/* GENERAL STYLING */
+
+body {
+  font-family: "Roboto", sans-serif;
+  position: relative;
+  height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* NAVBAR */
+
+.navbar {
+  position: fixed;
+  width: 250px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: var(--nav-bg-color);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.navbar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5em;
+  background-image: linear-gradient(
+    to right top,
+    #2f495e,
+    #2e465a,
+    #2e4357,
+    #2d4153,
+    #2c3e50
+  );
+  font-family: "BenchNine", sans-serif;
+  color: var(--accent-color);
+}
+
+.navbar__header i {
+  background-color: var(--hover-bg-color);
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar__menu {
+  font-weight: 100;
+}
+
+.navbar__menu__item {
+  cursor: pointer;
+  color: var(--nav-text-color);
+}
+
+.navbar__menu__item a {
+  display: block;
+  padding: 1em;
+}
+
+.active {
+  background-color: var(--hover-bg-color);
+  color: var(--accent-color);
+}
+
+.navbar__menu__item:hover {
+  background-color: var(--hover-bg-color);
+}
+
+.navbar__menu__item i {
+  margin-right: 20px;
+  color: var(--nav-text-color);
+}
+
+/* MAIN LAYOUT */
+
+.main {
+  position: fixed;
+  left: 250px;
+  right: 0;
+  height: 100vh;
+  padding: 2em 2em;
+}
+
+.create-library {
+  max-width: 100%;
+  min-height: 500px;
+  background-color: var(--nav-bg-color);
+  padding: 0 1em;
+}
+
+.create-library__title {
+  padding: 0.8em 0;
+  color: var(--main-title-color);
+  border-bottom: 1px dotted var(--text-color);
+  margin-bottom: 2em;
+}
+
+.create-library__form__label {
+  display: block;
+  color: var(--main-title-color);
+  margin-bottom: 1em;
+}
+
+.create-library__form__input {
+  width: 350px;
+  border: none;
+  padding: 0.5em;
+  font-size: 1rem;
+  margin-bottom: 0.7em;
+}
+
+.create-library__form__small {
+  display: block;
+  font-size: 0.7rem;
+  margin-bottom: 3.5em;
+}
+
+.btn {
+  border: none;
+  font-family: inherit;
+  padding: 0.7em 1.5em;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: var(--accent-color);
+  color: var(--nav-text-color);
+}
+
+.btn:hover {
+  background-color: rgb(1, 228, 164);
+}

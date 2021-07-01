@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/createLibrary.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com"> 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
     <link href="https://fonts.googleapis.com/css2?family=BenchNine&family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
@@ -32,36 +32,14 @@
         </ul>
       </nav>
       <main class="main">
-          <header class="header">
-            <i class="fas fa-cubes"></i>
-            <h1 class="header__title">Biblio</h1>
-            <p class="header__subtitle">Organize your home library</p>
-          </header>
-          <div class="card__container">
-            <div class="card">
-              <img class="card__image" src="./SVG/undraw_Booking_re_gw4j.svg" alt="" >
-              <h2 class="card__title">Create Libraries</h2>
-              <p class="card__description">
-                Choose a title for you library and create the library!
-              </p>
-            
-            </div>
-            <div class="card">
-              <img class="card__image" src="./SVG/undraw_Bookshelves_re_lxoy.svg" alt="">
-              <h2 class="card__title">Add Books</h2>
-              <p class="card__description">
-                You can search books from a large google database with the ISBN or with keywords (titles, authors...).
-                Or you can add them manually. 
-              </p>
-            </div>
-            <div class="card">
-              <img class="card__image" src="./SVG/undraw_mathematics_4otb.svg" alt="">
-              <h2 class="card__title">Search</h2>
-              <p class="card__description">
-                Search libraries you have created. You can rate books, add notes, change their status, add prices, or order them. You can delete them or delete whole libraries.
-              </p>
-              
-            </div>
+          <div class="create-library">
+            <h1 class="create-library__title">Create a Library</h1>
+            <form class="create-library__form">
+              <label class="create-library__form__label" for="library">Choose a title</label>
+              <input class="create-library__form__input" type="text" name="library" id="library" maxlength="40" placeholder="title">
+              <small class="create-library__form__small">Limit 40 characters</small>
+              <button class="btn" type="submit">Create Library</button>
+            </form>
           </div>
       </main>
   </body>
