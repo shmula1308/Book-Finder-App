@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel="stylesheet" href="css/createLibrary.css" />
+    <link rel="stylesheet" href="css/addBooks.css" />
+    <script src="js/script.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com"> 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
     <link href="https://fonts.googleapis.com/css2?family=BenchNine&family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
@@ -32,15 +33,34 @@
         </ul>
       </nav>
       <main class="main">
-          <div class="create-library">
-            <h1 class="create-library__title">Create a Library</h1>
-            <form class="create-library__form">
-              <label class="create-library__form__label" for="library">Choose a title</label>
-              <input class="create-library__form__input" type="text" name="library" id="library" maxlength="40" placeholder="title">
-              <small class="create-library__form__small">Limit 40 characters</small>
-              <button class="btn" type="submit">Create Library</button>
-            </form>
-          </div>
+        <div class="add-books">
+          <h1 class="add-books__title">Add Books</h1>
+          <ul class="add-books__list">
+            <li class="add__books__list-items ">
+              <a href="" class="active">Search</a>
+            </li>
+            <li class="add__books__list-items">
+              <a href="">Manual Entry</a>
+            </li>
+          </ul>
+          <form class="add-books__form">
+            <label class="add-books__form__label" for="book">Select a search method:</label>
+            <div class="search-method-container">
+              <label for="isbn" class="search-method bg">
+                <span class="search-method-checkbox checked"></span>
+                <input type="radio" name="radio" id="isbn" checked>
+                <span>ISBN</span>   
+              </label> 
+              <label for="keywords" class="search-method">
+                <span class="search-method-checkbox"></span>
+                <input type="radio" name="radio" id="keywords">
+                <span>Keywords (Titles,Authors...)</span>  
+              </label>
+            </div>
+            <input class="add-books__form__input" type="search" name="search" id="search"  placeholder="ISBN" autofocus>
+            <button class="btn" type="submit">Add Book</button>
+          </form>
+        </div>
       </main>
   </body>
 </html>
