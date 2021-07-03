@@ -27,8 +27,13 @@ a {
 }
 
 h1,
-h2 {
+h2,
+h4 {
   margin: 0;
+}
+
+span {
+  display: inline-block;
 }
 
 /* GENERAL STYLING */
@@ -116,11 +121,15 @@ img {
 
 /* MAIN LAYOUT */
 
+input,
+textarea {
+  display: block;
+}
+
 .main {
-  position: fixed;
+  position: absolute;
   left: 250px;
   right: 0;
-  height: 100vh;
   padding: 2em 2em;
 }
 
@@ -128,7 +137,7 @@ img {
   max-width: 100%;
   min-height: 500px;
   background-color: var(--nav-bg-color);
-  padding: 0 1em;
+  padding: 0 1em 3em 1em;
 }
 
 .add-books__title {
@@ -233,4 +242,84 @@ input[type="radio"] {
 
 .btn:hover {
   background-color: #059169;
+}
+
+/* MANUAL ENTRY FORM */
+
+small {
+  display: block;
+  font-size: 0.7rem;
+  margin-top: 0.4em;
+}
+
+.manual-entry-form__input {
+  width: 100%;
+  max-width: 450px;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em;
+  font-size: 1rem;
+  margin-top: 1em;
+}
+
+.published-date-container {
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1em;
+}
+
+.manual-entry-form__input--date {
+  width: 30.33%;
+  padding: 0.5em;
+  font-size: 1rem;
+}
+
+.manual-entry-form__input--pages {
+  max-width: 150px;
+}
+
+.btn--submit {
+  margin-top: 2em;
+}
+
+/* BOOKS DISPLAY COMPONENT */
+
+.display-books-container {
+}
+
+/* BOOK */
+
+.book {
+  display: flex;
+  background-color: var(--bg-color);
+  margin-bottom: 1em;
+  color: var(--nav-text-color);
+}
+
+.book__thumbnail {
+  padding: 0.4em;
+  flex-shrink: 0;
+}
+
+.book__info {
+  padding: 1.5em;
+}
+
+.book__title {
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+  margin-bottom: 0.5em;
+}
+
+.book__author {
+  font-size: 0.9rem;
+  color: var(--accent-color);
+  margin-bottom: 1em;
+}
+
+.book__data {
+  width: 200px;
+  font-weight: 100;
 }

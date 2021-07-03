@@ -43,7 +43,7 @@
               <a href="">Manual Entry</a>
             </li>
           </ul>
-          <form class="add-books__form">
+          <form class="add-books__form" id="search">
             <label class="add-books__form__label" for="book">Select a search method:</label>
             <div class="search-method-container">
               <label for="isbn" class="search-method bg">
@@ -60,6 +60,64 @@
             <input class="add-books__form__input" type="search" name="search" id="search"  placeholder="ISBN" autofocus>
             <button class="btn" type="submit">Add Book</button>
           </form>
+          <div class="display-books-container">
+            <div class="book">
+              <div class="book__thumbnail">
+                <img src="images/book-thumbnail-sample.jpeg" width='140px' alt="Book Thumbnail">
+                <button>Add Item</button>
+              </div>
+              <div class="book__info">
+                <h4 class="book__title">Slaughter House-five</h4>
+                <span class="book__author">Kurt Vonnegut</span>
+                <div class="book__data">
+                  <span class="book__year">1999</span>
+                  <span class="book__pages">275 pages</span>
+                  <span class="book__publisher">(Dial Press Trade Paperback)</span>
+                  <span class="book__isbn13"><em>ISBN 13:</em>9780385333849</span>
+                  <span class="book__isbn10"><em>ISBN 10:</em> 0385333846</span>
+                </div>
+                <p class="book__description">Billy Pilgrim returns home from the Second World War only to be kidnapped by aliens from the planet Tralfamadore, who teach him that time is an eternal present</p>
+                
+              </div>
+            </div>
+            <div class="book">
+              <div class="book__thumbnail">
+                <img src="images/book-thumbnail-sample.jpeg" width='140px' alt="Book Thumbnail">
+                <button>Add Item</button>
+              </div>
+              <div class="book__info">
+                <h4 class="book__title">Slaughter House-five</h4>
+                <span class="book__author">Kurt Vonnegut</span>
+                <div class="book__data">
+                  <span class="book__year">1999</span>
+                  <span class="book__pages">275 pages</span>
+                  <span class="book__publisher">(Dial Press Trade Paperback)</span>
+                  <span class="book__isbn13"><em>ISBN 13:</em>9780385333849</span>
+                  <span class="book__isbn10"><em>ISBN 10:</em> 0385333846</span>
+                </div>
+                <p class="book__description">Billy Pilgrim returns home from the Second World War only to be kidnapped by aliens from the planet Tralfamadore, who teach him that time is an eternal present</p>
+                
+              </div>
+            </div>
+          </div>
+          <!-- <form class="manual-entry-form" id="manual-entry">
+            <h3 class="manual-entry-form__title">Manual Entry</h3>
+            <input class="manual-entry-form__input" type="text" name="title" id="title" placeholder="Title">
+            <input class="manual-entry-form__input" type="text" name="authors" id="authors" placeholder="Authors">
+            <small>Separate author(s) with comma.</small>
+            <textarea class="manual-entry-form__input" name="description" id="description" cols="30" rows="10" placeholder='Description'></textarea>
+            <div class="published-date-container">
+              <input class="manual-entry-form__input--date" type="text" name="year" maxlength="4" placeholder="YYYY">
+              <input class="manual-entry-form__input--date" type="text" name="month" maxlength="2" placeholder="MM">
+              <input class="manual-entry-form__input--date" type="text" name="day" maxlength="2" placeholder="DD">
+            </div>
+            <input class="manual-entry-form__input" type="text" name="publisher" placeholder="Publisher">
+            <input class="manual-entry-form__input" type="text" name="isbn13" maxLength="13" placeholder="ISBN 13">
+            <small>Numbers Only</small>
+            <input class=" manual-entry-form__input manual-entry-form__input--pages" type="text" name="pages"  placeholder="Pages">
+            <small>Numbers only</small>
+            <button class='btn btn--submit' type="submit">Submit</button>
+          </form> -->
         </div>
       </main>
   </body>
