@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="css/libraries.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=BenchNine&family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home Library Catalogue</title>
+  </head>
+  <body>
+      <nav class="navbar">
+        <header class="navbar__header">
+          <div class="navbar__header__title">
+            <h1><a href="#!">Biblio</a></h1>
+          </div>
+          <div class="navbar__header__logo">
+            <a href="#!"><i class="fas fa-book-reader"></i></a>
+          </div>
+        </header>
+        <div class="navbar__menu">
+          <ul>
+            <li class="navbar__menu__item active"><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
+            <li class="navbar__menu__item"><a href="./libraries.html"><i class="fas fa-folder"></i>Your Libraries</a></li>
+            <li class="navbar__menu__item"><a href="./createLibrary.html"><i class="fas fa-folder-plus"></i>Create a Library</a></li>
+            <li class="navbar__menu__item"><a href="./addBooks.html"><i class="fas fa-plus-circle"></i>Add Books</a></li>
+          </ul>
+        </div>
+        </ul>
+      </nav>
+      <main class="main">
+        <div class="libraries">
+            <header class='libraries-header'>
+                <h1 class="libraries__main-title">Libraries</h1>
+                <label for="library">Choose a library:</label>
+                <select name="library" id="library" class="select">
+                    <option value="none" autofocus>no library is selected</option>
+                    <option value="science fiction">Science Fiction</option>
+                    <option value="history">History</option>
+                    <option value="anthroplogy">Anthropology</option>
+                    <option value="wishlist">Wishlist</option>
+                </select>
+                <div class="letter-range-holder">
+                    <div class="letter_range">          
+                        <span id="letter_A" class="letter">A</span>
+                        <span id="letter_B" class="letter">B</span>
+                        <span id="letter_C" class="letter">C</span>
+                        <span id="letter_D" class="letter">D</span>
+                        <span id="letter_E" class="letter">E</span>
+                        <span id="letter_F" class="letter">F</span>
+                        <span id="letter_G" class="letter">G</span>
+                        <span id="letter_H" class="letter">H</span>
+                        <span id="letter_I" class="letter">I</span>
+                        <span id="letter_J" class="letter">J</span>
+                        <span id="letter_K" class="letter">K</span>
+                        <span id="letter_L" class="letter">L</span>
+                        <span id="letter_M" class="letter">M</span>
+                        <span id="letter_N" class="letter">N</span>
+                        <span id="letter_O" class="letter">O</span>
+                        <span id="letter_P" class="letter">P</span>
+                        <span id="letter_Q" class="letter">Q</span>
+                        <span id="letter_R" class="letter">R</span>
+                        <span id="letter_S" class="letter">S</span>
+                        <span id="letter_T" class="letter">T</span>
+                        <span id="letter_U" class="letter">U</span>
+                        <span id="letter_V" class="letter">V</span>
+                        <span id="letter_W" class="letter">W</span>
+                        <span id="letter_X" class="letter">X</span>
+                        <span id="letter_Y" class="letter">Y</span>
+                        <span id="letter_Z" class="letter">Z</span>
+                        <span id="all" class="letter selected">ALL</span>
+                    </div>
+                </div>
+            </header>
+            <div class="display-books-container">
+                <div class="first-letter">S</div>
+                <div class="book">
+                  <div class="book__thumbnail">
+                    <img src="images/book-thumbnail-sample.jpeg" width='140px' alt="Book Thumbnail">
+                  </div>
+                  <div class="book__info">
+                    <h4 class="book__title">Slaughter House-five</h4>
+                    <span class="book__author">Kurt Vonnegut</span>
+                    <div class="book__data">
+                      <span class="book__year">1999</span>
+                      <span class="book__pages">275 pages</span>
+                      <span class="book__publisher">(Dial Press Trade Paperback)</span>
+                      <span class="book__isbn13">ISBN-13:9780385333849</span>
+                      <span class="book__isbn10">ISBN-10:0385333846</span>
+                    </div>
+                    <p class="book__description">Billy Pilgrim returns home from the Second World War only to be kidnapped by aliens from the planet Tralfamadore, who teach him that time is an eternal present</p>
+                    <div class="book__controls">
+                        <i class="fas fa-pencil-alt" title="Edit"></i>
+                        <i class="fas fa-tags" title="Tags"></i>
+                        <i class="fas fa-sticky-note" title="Add Notes"></i>
+                        <i class="fas fa-dollar-sign" title="Add Price"></i>
+                        <i class="fas fa-cart-plus" title="Purchase"></i>
+                        <i class="fas fa-trash-alt" title="Delete"></i>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </main>
+  </body>
+</html>
