@@ -50,6 +50,19 @@ span {
   display: inline-block;
 }
 
+input,
+textarea {
+  display: block;
+}
+
+small {
+  display: block;
+  margin: auto;
+  margin-top: 0.4em;
+  width: 100%;
+  max-width: 80%;
+}
+
 /* NAVBAR */
 
 .navbar {
@@ -121,10 +134,9 @@ span {
 /* MAIN LAYOUT */
 
 .main {
-  position: fixed;
+  position: absolute;
   left: 250px;
   right: 0;
-  height: 100vh;
   padding: 2em 2em;
 }
 
@@ -235,19 +247,22 @@ span {
 .book {
   position: relative;
   display: flex;
+  align-items: center;
   background-color: var(--bg-color);
   margin-bottom: 1em;
   color: var(--nav-text-color);
-  padding: 1em;
+  padding: 1em 0 5em 1em;
   border-radius: 5px;
 }
 
 .book__thumbnail {
   flex-shrink: 0;
+  align-self: flex-start;
 }
 
 .book__info {
-  padding: 1.5em;
+  padding: 0 3.5em 0 1.5em;
+  max-width: 80%;
 }
 
 .book__title {
@@ -300,6 +315,8 @@ span {
   bottom: 0;
   background-color: var(--accent-color);
   box-shadow: inset 3px 0 10px -6px red;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 .book__controls i {
@@ -314,3 +331,192 @@ span {
 .book__controls i:hover {
   background-color: var(--bg-color);
 }
+
+/* EDIT OPTION - FORM */
+
+.edit-form {
+  width: 100%;
+}
+
+.manual-entry-form__input {
+  width: 100%;
+  max-width: 80%;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em;
+  font-size: 1rem;
+  margin: auto;
+  margin-top: 0.8em;
+}
+
+/* TAG OPTION - INPUT */
+
+.tag-input-container {
+  width: 100%;
+}
+
+.tag-small {
+  display: block;
+  font-size: 0.7rem;
+  margin: 0;
+  margin-top: 0.4em;
+  width: 100%;
+  max-width: 80%;
+}
+
+.tag-input {
+  width: 100%;
+  max-width: 80%;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em;
+  font-size: 1rem;
+  margin-top: 0.8em;
+}
+
+.tag {
+  display: inline-block;
+  background-color: salmon;
+  color: white;
+  padding: 5px;
+  border-radius: 10px;
+  margin-right: 5px;
+}
+
+/* NOTES INPUT */
+
+.notes-input-container {
+  width: 100%;
+}
+
+.notes-input-container small {
+  margin: 0 0 0.5em 0;
+}
+
+.notes-input-container textarea {
+  resize: none;
+}
+
+.notes-input {
+  width: 100%;
+  max-width: 90%;
+  min-height: 100px;
+}
+
+.notes {
+  position: relative;
+  width: 100%;
+  max-width: 90%;
+  min-height: 100px;
+  background-color: var(--main-title-color);
+  padding: 1.5em;
+  color: rgb(121, 116, 116);
+  margin-top: 1.2em;
+}
+
+.notes i {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  color: #9c9696;
+}
+
+/* PRICE INPUT */
+
+.price-input-container {
+  width: 100%;
+}
+
+.price-small {
+  display: block;
+  font-size: 0.7rem;
+  margin: 0;
+  margin-top: 0.4em;
+  width: 100%;
+  max-width: 80%;
+}
+
+.price-input {
+  width: 100%;
+  max-width: 80%;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em;
+  font-size: 1rem;
+  margin-top: 0.8em;
+}
+
+.price-tag {
+  margin-top: 0.5em;
+  color: var(--accent-color);
+}
+
+/* DELETE BOOK MODAL */
+
+.modal-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 400px;
+  min-height: 180px;
+  background-color: #ffffff;
+}
+
+.modal__cancel {
+}
+
+.modal__text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  font-weight: 100;
+  font-size: 1.2rem;
+}
+
+.modal__buttons {
+  display: flex;
+}
+
+.btn {
+  border: none;
+  width: 50%;
+  padding: 1.1em 0;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1.2rem;
+  font-weight: 100;
+  cursor: pointer;
+}
+
+.btn--primary {
+  background-color: var(--accent-color);
+}
+
+.btn--secondary {
+  background-color: #888888;
+}
+
+/* <div class="modal-container">
+<div class="modal">
+  <span class="modal__cancel">X</span>
+  <div class="modal__text">Delete this item from your library?</div>
+  <div class="modal__buttons">
+    <button class='btn btn--primary'>Delete</button>
+    <button class='btn btn--secondary'>Cancel</button>
+  </div>
+</div>
+</div> */
