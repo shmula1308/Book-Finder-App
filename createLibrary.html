@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="stylesheet" href="css/createLibrary.css" />
+    <script src="js/script.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com"> 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
     <link href="https://fonts.googleapis.com/css2?family=BenchNine&family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
@@ -11,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home Library Catalogue</title>
   </head>
-  <body>
+  <body id="createLibraryPage">
       <nav class="navbar">
         <header class="navbar__header">
           <div class="navbar__header__title">
@@ -22,10 +23,10 @@
           </div>
         </header>
         <div class="navbar__menu">
-          <ul>
-            <li class="navbar__menu__item active"><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
+          <ul class="navbar__list">
+            <li class="navbar__menu__item"><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
             <li class="navbar__menu__item"><a href="./libraries.html"><i class="fas fa-folder"></i>Your Libraries</a></li>
-            <li class="navbar__menu__item"><a href="./createLibrary.html"><i class="fas fa-folder-plus"></i>Create a Library</a></li>
+            <li class="navbar__menu__item active"><a href="./createLibrary.html"><i class="fas fa-folder-plus"></i>Create a Library</a></li>
             <li class="navbar__menu__item"><a href="./addBooks.html"><i class="fas fa-plus-circle"></i>Add Books</a></li>
           </ul>
         </div>

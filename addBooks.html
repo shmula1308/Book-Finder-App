@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home Library Catalogue</title>
   </head>
-  <body>
+  <body id="addBooksPage">
       <nav class="navbar">
         <header class="navbar__header">
           <div class="navbar__header__title">
@@ -23,11 +23,11 @@
           </div>
         </header>
         <div class="navbar__menu">
-          <ul>
-            <li class="navbar__menu__item active"><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
+          <ul class="navbar__list">
+            <li class="navbar__menu__item"><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
             <li class="navbar__menu__item"><a href="./libraries.html"><i class="fas fa-folder"></i>Your Libraries</a></li>
             <li class="navbar__menu__item"><a href="./createLibrary.html"><i class="fas fa-folder-plus"></i>Create a Library</a></li>
-            <li class="navbar__menu__item"><a href="./addBooks.html"><i class="fas fa-plus-circle"></i>Add Books</a></li>
+            <li class="navbar__menu__item active"><a href="./addBooks.html"><i class="fas fa-plus-circle"></i>Add Books</a></li>
           </ul>
         </div>
         </ul>
@@ -36,12 +36,8 @@
         <div class="add-books">    
           <h1 class="add-books__title">Add Books</h1>
           <ul class="add-books__list">
-            <li class="add__books__list-items ">
-              <a href="" class="active">Search</a>
-            </li>
-            <li class="add__books__list-items">
-              <a href="">Manual Entry</a>
-            </li>
+            <button class="btn active" id="searchBtn">Search</button>
+            <button class="btn" id="manualBtn">Manual Entry</button>
           </ul>
           <form class="add-books__form" id="search">
             <label class="add-books__form__label" for="book">Select a search method:</label>
@@ -100,7 +96,7 @@
               </div>
             </div>
           </div>
-          <!-- <form class="manual-entry-form" id="manual-entry">
+          <form class="manual-entry-form" id="manual-entry">
             <h3 class="manual-entry-form__title">Manual Entry</h3>
             <input class="manual-entry-form__input" type="text" name="title" id="title" placeholder="Title">
             <input class="manual-entry-form__input" type="text" name="authors" id="authors" placeholder="Authors">
@@ -117,7 +113,7 @@
             <input class=" manual-entry-form__input manual-entry-form__input--pages" type="text" name="pages"  placeholder="Pages">
             <small>Numbers only</small>
             <button class='btn btn--submit' type="submit">Submit</button>
-          </form> -->
+          </form>
         </div>
       </main>
   </body>

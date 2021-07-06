@@ -156,24 +156,15 @@ textarea {
   padding: 1em 0;
 }
 
-.add__books__list-items {
-  margin-right: 5px;
+.add-books__list .btn {
+  margin-right: 0.7em;
 }
 
-.add__books__list-items a {
-  display: inline-block;
-  background-color: var(--accent-color);
-  padding: 0.7em 2.5em;
-  color: var(--nav-text-color);
-  font-size: 0.9rem;
-  border-radius: 4px;
-}
-
-.add__books__list-items a:hover {
+.add-books__list .btn:hover {
   background-color: #059169;
 }
 
-.add__books__list-items .active {
+.add-books__list .btn.active {
   background-color: #059169;
 }
 
@@ -254,6 +245,10 @@ small {
   display: block;
   font-size: 0.7rem;
   margin-top: 0.4em;
+}
+
+.manual-entry-form {
+  display: none;
 }
 
 .manual-entry-form__input {

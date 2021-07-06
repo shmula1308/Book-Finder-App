@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="stylesheet" href="css/index.css" />
+    <script src="js/script.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com"> 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
     <link href="https://fonts.googleapis.com/css2?family=BenchNine&family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
@@ -11,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home Library Catalogue</title>
   </head>
-  <body>
+  <body id="home">
       <nav class="navbar">
         <header class="navbar__header">
           <div class="navbar__header__title">
@@ -22,7 +23,7 @@
           </div>
         </header>
         <div class="navbar__menu">
-          <ul>
+          <ul class="navbar__list">
             <li class="navbar__menu__item active"><a href="./index.html"><i class="fas fa-home"></i>Home</a></li>
             <li class="navbar__menu__item"><a href="./libraries.html"><i class="fas fa-folder"></i>Your Libraries</a></li>
             <li class="navbar__menu__item"><a href="./createLibrary.html"><i class="fas fa-folder-plus"></i>Create a Library</a></li>
@@ -40,9 +41,9 @@
           <div class="card__container">
             <div class="card">
               <img class="card__image" src="./SVG/undraw_Booking_re_gw4j.svg" alt="" >
-              <h2 class="card__title">Create Libraries</h2>
+              <h2 class="card__title">Create a Library</h2>
               <p class="card__description">
-                Choose a title for you library and create the library!
+                Before adding any books you need to create a library. Choose a meaningful title that makes sense to you! Don't be afraid! We will hold your hand along the way!
               </p>
             
             </div>
@@ -50,8 +51,8 @@
               <img class="card__image" src="./SVG/undraw_Bookshelves_re_lxoy.svg" alt="">
               <h2 class="card__title">Add Books</h2>
               <p class="card__description">
-                You can search books from a large google database with the ISBN or with keywords (titles, authors...).
-                Or you can add them manually. 
+                Search for books from a large google database with the ISBN or with keywords (titles, authors...)<br/>
+                Or add them manually. 
               </p>
             </div>
             <div class="card">
