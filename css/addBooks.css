@@ -298,6 +298,7 @@ small {
   color: var(--nav-text-color);
   padding: 1em;
   border-radius: 5px;
+  width: 1100px;
 }
 
 .book__thumbnail {
@@ -333,7 +334,8 @@ small {
   display: block;
   background-color: transparent;
   border: 1px solid var(--accent-color);
-  margin-top: 1em;
+
+  margin: 1em auto;
 }
 
 .btn--add-item i {

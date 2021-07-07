@@ -1,4 +1,6 @@
 const app = {
+  baseURL: "https://www.googleapis.com/books/v1/volumes?q=search+terms",
+
   init: () => {
     document.addEventListener("DOMContentLoaded", app.getSelectedPage);
   },
@@ -13,7 +15,8 @@ const app = {
         app.createLibrary();
         break;
       case "addBooksPage":
-        app.addBooks();
+        app.searchBooks();
+        app.addBooksPageUI();
         break;
     }
   },
@@ -23,10 +26,89 @@ const app = {
       ev.preventDefault();
     });
   },
+  searchBooks: () => {
+    const searchInput = document.getElementById("search-input");
+    const searchForm = document.getElementById("search-form");
+    console.log(searchForm);
+    searchForm.addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      let url = `https://www.googleapis.com/books/v1/volumes?q=${searchInput.value}`;
+      let req = new Request(url, {
+        method: "GET",
+        mode: "cors",
+      });
 
-  addBooks: () => {
-    const addMethod = app.addBooksPageUI();
+      fetch(req)
+        .then((resp) => resp.json())
+        .then(app.displayBooks)
+        .catch(app.err);
+    });
   },
+
+  displayBooks: (result) => {
+    console.log("items", result.items);
+    const displayBooksContainer = document.querySelector(
+      ".display-books-container"
+    );
+
+    let df = new DocumentFragment();
+
+    result.items.forEach((data) => {
+      let b = app.prepareBookData(data);
+      let book = document.createElement("div");
+      book.classList.add("book");
+      book.innerHTML = `
+      <div class="book__thumbnail">
+        <img src=${b.thumbnail} width='140px' alt="Book Thumbnail">
+        <button class='btn btn--add-item'><i class="fas fa-plus-circle"></i>Add Item</button>
+      </div>
+      <div class="book__info">
+        <h4 class="book__title">${data.volumeInfo.title}</h4>
+        <span class="book__author">${data.volumeInfo.authors.join("\n")}</span>
+        <div class="book__data">
+          <span class="book__year">${b.datePublished}</span>
+          <span class="book__pages">${b.pages}</span>
+          <span class="book__publisher">${b.publisher}</span>
+          <span class="book__isbn13">ISBN-10: ${
+            !b.isbn[0] ? "" : b.isbn[0].identifier
+          }</span>
+          <span class="book__isbn10">ISBN-13: ${
+            !b.isbn[1] ? "" : b.isbn[1].identifier
+          }</span>
+        </div>
+        <p class="book__description">${b.description}</p>
+      </div>`;
+
+      df.append(book);
+    });
+    console.log("hello");
+    displayBooksContainer.innerHTML = "";
+    displayBooksContainer.append(df);
+  },
+
+  prepareBookData: (book) => {
+    let bookObj = {
+      thumbnail:
+        book.volumeInfo.imageLinks === undefined
+          ? ""
+          : book.volumeInfo.imageLinks.thumbnail,
+      datePublished:
+        book.volumeInfo === undefined ? "" : book.volumeInfo.publishedDate,
+      pages: book.volumeInfo === undefined ? "" : book.volumeInfo.pageCount,
+      publisher: book.volumeInfo === undefined ? "" : book.volumeInfo.publisher,
+      isbn:
+        book.volumeInfo.industryIdentifiers === undefined
+          ? ""
+          : book.volumeInfo.industryIdentifiers,
+      description:
+        book.volumeInfo.description === undefined
+          ? "no description available"
+          : book.volumeInfo.description,
+    };
+    return bookObj;
+  },
+
+  showLoading: () => {},
 
   addBooksPageUI: () => {
     let searchMethodBtn = "isbn";
@@ -109,6 +191,10 @@ const app = {
 
   getStore: () => {
     console.log("getstore");
+  },
+
+  err: (error) => {
+    console.log(error.message);
   },
 };
 
