@@ -1,15 +1,19 @@
 const app = {
-  baseURL: "https://www.googleapis.com/books/v1/volumes?q=search+terms",
+  searchMethodBtn: "isbn",
+  addBooksMethod: "search",
+  libraries: [],
 
   init: () => {
     document.addEventListener("DOMContentLoaded", app.getSelectedPage);
   },
+
   getSelectedPage: () => {
     let page = document.body.id;
     switch (page) {
       case "librariesPage":
-        app.setStore();
-        app.getStore();
+        // app.getStore();
+        app.displayStoredLibraries();
+        app.displayStoredBooks();
         break;
       case "createLibraryPage":
         app.createLibrary();
@@ -24,15 +28,81 @@ const app = {
     let form = document.querySelector(".create-library__form");
     form.addEventListener("submit", (ev) => {
       ev.preventDefault();
+      const libraryName = document.querySelector(
+        ".create-library__form__input"
+      ).value;
+
+      const library = {
+        name: libraryName,
+        books: [],
+      };
+      app.setStore(library);
+      location.assign("./libraries.html");
     });
   },
+
+  displayStoredLibraries: () => {
+    const select = document.querySelector(".select");
+    app.getStore();
+    if (app.libraries === null) return;
+
+    let df = new DocumentFragment();
+
+    console.log(app.libraries);
+    app.libraries.forEach((library) => {
+      const option = document.createElement("option");
+      option.value = library.name;
+      option.textContent = library.name;
+
+      df.append(option);
+    });
+    select.innerHTML = "";
+    select.appendChild(df);
+    app.displayStoredBooks();
+  },
+
+  displayStoredBooks: () => {
+    document.querySelector(".select").addEventListener("change", (ev) => {
+      app.getStore();
+      let selectedLibrary = [
+        {
+          title: ev.target.value,
+        },
+      ];
+      localStorage.setItem("selectedLibrary", JSON.stringify(selectedLibrary));
+    });
+  },
+
+  setStore: (library) => {
+    if (JSON.parse(localStorage.getItem("libraries")) === null) {
+      app.libraries = [];
+      app.libraries.push(library);
+      localStorage.setItem("libraries", JSON.stringify(app.libraries));
+    } else {
+      app.libraries = JSON.parse(localStorage.getItem("libraries"));
+      app.libraries.push(library);
+      localStorage.setItem("libraries", JSON.stringify(app.libraries));
+    }
+  },
+
+  getStore: () => {
+    app.libraries = JSON.parse(localStorage.getItem("libraries"));
+  },
+
   searchBooks: () => {
     const searchInput = document.getElementById("search-input");
     const searchForm = document.getElementById("search-form");
-    console.log(searchForm);
     searchForm.addEventListener("submit", (ev) => {
       ev.preventDefault();
-      let url = `https://www.googleapis.com/books/v1/volumes?q=${searchInput.value}`;
+      //Search with ISBN number
+      let url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${searchInput.value
+        .split("-")
+        .join("")}`;
+      //Search with keywords
+      if (app.searchMethodBtn === "keywords") {
+        url = `https://www.googleapis.com/books/v1/volumes?q=${searchInput.value}`;
+      }
+
       let req = new Request(url, {
         method: "GET",
         mode: "cors",
@@ -40,21 +110,29 @@ const app = {
 
       fetch(req)
         .then((resp) => resp.json())
-        .then(app.displayBooks)
+        .then(app.displaySearchResult)
         .catch(app.err);
     });
   },
 
-  displayBooks: (result) => {
-    console.log("items", result.items);
+  displaySearchResult: (result) => {
     const displayBooksContainer = document.querySelector(
       ".display-books-container"
     );
+
+    if (result.items === undefined) {
+      let p = document.createElement("p");
+      p.textContent = "No Results";
+      p.classList.add("no-result");
+      displayBooksContainer.append(p);
+      return;
+    }
 
     let df = new DocumentFragment();
 
     result.items.forEach((data) => {
       let b = app.prepareBookData(data);
+
       let book = document.createElement("div");
       book.classList.add("book");
       book.innerHTML = `
@@ -63,17 +141,17 @@ const app = {
         <button class='btn btn--add-item'><i class="fas fa-plus-circle"></i>Add Item</button>
       </div>
       <div class="book__info">
-        <h4 class="book__title">${data.volumeInfo.title}</h4>
-        <span class="book__author">${data.volumeInfo.authors.join("\n")}</span>
+        <h4 class="book__title">${b.title}</h4>
+        <span class="book__author">${b.authors}</span>
         <div class="book__data">
           <span class="book__year">${b.datePublished}</span>
-          <span class="book__pages">${b.pages}</span>
+          <span class="book__pages">${b.pages} pages</span>
           <span class="book__publisher">${b.publisher}</span>
-          <span class="book__isbn13">ISBN-10: ${
-            !b.isbn[0] ? "" : b.isbn[0].identifier
+          <span class="book__isbn10">ISBN-10: ${
+            !b.isbn[0] ? "no data" : b.isbn[0].identifier
           }</span>
-          <span class="book__isbn10">ISBN-13: ${
-            !b.isbn[1] ? "" : b.isbn[1].identifier
+          <span class="book__isbn13">ISBN-13: ${
+            !b.isbn[1] ? "no data" : b.isbn[1].identifier
           }</span>
         </div>
         <p class="book__description">${b.description}</p>
@@ -81,21 +159,77 @@ const app = {
 
       df.append(book);
     });
-    console.log("hello");
+
     displayBooksContainer.innerHTML = "";
     displayBooksContainer.append(df);
+
+    displayBooksContainer.addEventListener("click", app.addBookToLibrary);
+  },
+
+  addBookToLibrary: (ev) => {
+    if (ev.target.closest("button")) {
+      const addedBook = ev.target.parentElement.parentElement;
+      const book = {
+        image: addedBook.querySelector("img").src,
+        title: addedBook.querySelector(".book__title").textContent,
+        author: addedBook.querySelector(".book__author").textContent,
+        year: addedBook.querySelector(".book__year").textContent,
+        pages: addedBook.querySelector(".book__pages").textContent,
+        publisher: addedBook.querySelector(".book__publisher").textContent,
+        isbn10: addedBook.querySelector(".book__isbn10").textContent,
+        isbn13: addedBook.querySelector(".book__isbn13").textContent,
+        description: addedBook.querySelector(".book__description").textContent,
+      };
+
+      const selectedLibrary = JSON.parse(
+        localStorage.getItem("selectedLibrary")
+      )[0].title;
+
+      app.getStore();
+
+      const storedLibrary = app.libraries.filter(
+        (library) => library.name === selectedLibrary
+      );
+      let updatedLibrary = storedLibrary[0].books.push(book);
+
+      const updatedLibraries = app.libraries.map((library) => {
+        if (library.title === selectedLibrary) {
+          return updatedLibrary;
+        } else {
+          return library;
+        }
+      });
+
+      localStorage.setItem("libraries", JSON.stringify(updatedLibraries));
+    }
   },
 
   prepareBookData: (book) => {
     let bookObj = {
       thumbnail:
         book.volumeInfo.imageLinks === undefined
-          ? ""
+          ? "./images/book-image-placeholder.png"
           : book.volumeInfo.imageLinks.thumbnail,
+      title:
+        book.volumeInfo.title === undefined
+          ? "No title"
+          : book.volumeInfo.title,
+      authors:
+        book.volumeInfo.authors === undefined
+          ? "Author Unknown"
+          : book.volumeInfo.authors.join(" | "),
       datePublished:
-        book.volumeInfo === undefined ? "" : book.volumeInfo.publishedDate,
-      pages: book.volumeInfo === undefined ? "" : book.volumeInfo.pageCount,
-      publisher: book.volumeInfo === undefined ? "" : book.volumeInfo.publisher,
+        book.volumeInfo.publishedDate === undefined
+          ? "no info"
+          : book.volumeInfo.publishedDate,
+      pages:
+        book.volumeInfo.pageCount === undefined
+          ? "no info"
+          : book.volumeInfo.pageCount,
+      publisher:
+        book.volumeInfo.publisher === undefined
+          ? "no info"
+          : book.volumeInfo.publisher,
       isbn:
         book.volumeInfo.industryIdentifiers === undefined
           ? ""
@@ -111,8 +245,12 @@ const app = {
   showLoading: () => {},
 
   addBooksPageUI: () => {
-    let searchMethodBtn = "isbn";
-    let addBooksMethod = "search";
+    // Update title depending on which library has been selected
+    const selectedLibrary = JSON.parse(
+      localStorage.getItem("selectedLibrary")
+    )[0].title;
+    document.querySelector(".add-books__title").textContent =
+      "Add Books to" + " " + selectedLibrary;
     // Select button container (Search / Manual Entry Buttons)
     const addBooksMethodButtons = document.querySelector(".add-books__list");
     addBooksMethodButtons.addEventListener("click", (ev) => {
@@ -131,7 +269,7 @@ const app = {
       // document.querySelector('.add-books__form').
       if (clickedButton.id === "manualBtn") {
         // Remove Search Form
-        const searchForm = document.getElementById("search");
+        const searchForm = document.getElementById("search-form");
         searchForm.style.display = "none";
         //Remove book display
         const bookDisplay = document.querySelector(".display-books-container");
@@ -142,7 +280,7 @@ const app = {
       }
       if (clickedButton.id === "searchBtn") {
         // Show Search Form
-        const searchForm = document.getElementById("search");
+        const searchForm = document.getElementById("search-form");
         searchForm.style.display = "block";
         //Show book display
         const bookDisplay = document.querySelector(".display-books-container");
@@ -165,12 +303,12 @@ const app = {
       if (ev.target.id === "keywords") {
         const addBooksInput = document.querySelector(".add-books__form__input");
         addBooksInput.placeholder = "Keywords (Titles,Authors...)";
-        addBooksInput.value = null;
+        app.searchMethodBtn = "keywords";
       }
       if (ev.target.id === "isbn") {
         const addBooksInput = document.querySelector(".add-books__form__input");
         addBooksInput.placeholder = "ISBN";
-        addBooksInput.value = null;
+        app.searchMethodBtn = "isbn";
       }
       if (ev.target.closest("input")) {
         //Remove white checkbox from previously selected button
@@ -183,14 +321,6 @@ const app = {
         ev.target.previousElementSibling.classList.add("checked");
       }
     });
-  },
-
-  setStore: () => {
-    console.log("setstore");
-  },
-
-  getStore: () => {
-    console.log("getstore");
   },
 
   err: (error) => {
