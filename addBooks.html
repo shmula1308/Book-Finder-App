@@ -57,26 +57,63 @@
             <button class="btn" type="submit">Find Book</button>
           </form>
           <div class="display-books-container">
-          </div>
-          <form class="manual-entry-form" id="manual-entry">
-            <h3 class="manual-entry-form__title">Manual Entry</h3>
-            <input class="manual-entry-form__input" type="text" name="title" id="title" placeholder="Title">
-            <input class="manual-entry-form__input" type="text" name="authors" id="authors" placeholder="Authors">
-            <small>Separate author(s) with comma.</small>
-            <textarea class="manual-entry-form__input" name="description" id="description" cols="30" rows="10" placeholder='Description'></textarea>
-            <div class="published-date-container">
-              <input class="manual-entry-form__input--date" type="text" name="year" maxlength="4" placeholder="YYYY">
-              <input class="manual-entry-form__input--date" type="text" name="month" maxlength="2" placeholder="MM">
-              <input class="manual-entry-form__input--date" type="text" name="day" maxlength="2" placeholder="DD">
+            <!-- <div class="book">
+              <div class="edit-form">
+                <input class="edit-form__input" type="text" name="title" id="edit_title" placeholder="Title">
+                <input class="edit-form__input" type="text" name="authors" id="edit_authors" placeholder="Authors">
+                <small>Separate author(s) with comma.</small>
+                <textarea class="edit-form__input" name="description" id="edit_description" cols="30" rows="10" placeholder='Description'></textarea>
+                <small>(press enter to save)</small>
+              </div>
+              <div class="inner-container">
+                <div class="book__thumbnail">
+                  <img src="http://books.google.com/books/content?id=xcIHnAEACAAJ&amp;printsec=frontcover&amp;img=1&amp;zoom=1&amp;source=gbs_api" width="140px" alt="Book Thumbnail">
+                  <button class="btn btn--add-item"><i class="fas fa-plus-circle"></i>Add Item</button>
+                </div>
+                <div class="book__info">
+                  <h4 class="book__title">Kurt Vonnegut</h4>
+                  <span class="book__author">Kurt Vonnegut, Jr. | Dan Wakefield</span>
+                  <div class="book__data">
+                    <span class="book__year">2014-01-14</span>
+                    <span class="book__pages">436 pages</span>
+                    <span class="book__publisher">Dial Press Trade Paperbacks</span>
+                    <span class="book__isbn10">ISBN-10: 0385343760</span>
+                    <span class="book__isbn13">ISBN-13: 9780385343763</span>
+                  </div>
+                  <p class="book__description">A compilation of personal correspondence written over a sixty-year period offers insight into the iconic American author's literary personality, his experiences as a German POW, his struggles with fame, and the inspirations for his famous books.</p>
+                </div>
+              </div>
+              <div class="book__controls">
+                <i class="fas fa-ban"></i>
+                <i class="fas fa-pencil-alt" title="Edit"></i>
+                <i class="fas fa-tags" title="Tags"></i>
+                <i class="fas fa-sticky-note" title="Add Notes"></i>
+                <i class="fas fa-dollar-sign" title="Add Price"></i>
+                <i class="fas fa-cart-plus" title="Purchase"></i>
+                <i class="fas fa-trash-alt" title="Delete"></i>
+              </div>
+            </div> -->
+            
             </div>
-            <input class="manual-entry-form__input" type="text" name="publisher" placeholder="Publisher">
-            <input class="manual-entry-form__input" type="text" name="isbn13" maxLength="13" placeholder="ISBN 13">
-            <small>Numbers Only</small>
-            <input class=" manual-entry-form__input manual-entry-form__input--pages" type="text" name="pages"  placeholder="Pages">
-            <small>Numbers only</small>
-            <button class='btn btn--submit' type="submit">Submit</button>
-          </form>
-        </div>
-      </main>
-  </body>
+            <form class="manual-entry-form" id="manual-entry">
+              <h3 class="manual-entry-form__title">Manual Entry</h3>
+              <input class="manual-entry-form__input" type="text" name="title" id="title" placeholder="Title">
+              <input class="manual-entry-form__input" type="text" name="authors" id="authors" placeholder="Authors">
+              <small>Separate author(s) with comma.</small>
+              <textarea class="manual-entry-form__input" name="description" id="description" cols="30" rows="10" placeholder='Description'></textarea>
+              <div class="published-date-container">
+                <input class="manual-entry-form__input--date" type="text" name="year" maxlength="4" placeholder="YYYY">
+                <input class="manual-entry-form__input--date" type="text" name="month" maxlength="2" placeholder="MM">
+                <input class="manual-entry-form__input--date" type="text" name="day" maxlength="2" placeholder="DD">
+              </div>
+              <input class="manual-entry-form__input" type="text" name="publisher" placeholder="Publisher">
+              <input class="manual-entry-form__input" type="text" name="isbn13" maxLength="13" placeholder="ISBN 13">
+              <small>Numbers Only</small>
+              <input class=" manual-entry-form__input manual-entry-form__input--pages" type="text" name="pages"  placeholder="Pages">
+              <small>Numbers only</small>
+              <button class='btn btn--submit' type="submit">Submit</button>
+            </form>
+          
+        </main>
+    </body>
 </html>

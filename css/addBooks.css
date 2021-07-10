@@ -52,6 +52,14 @@ img {
   max-width: 100%;
 }
 
+/* small {
+  display: block;
+  margin: auto;
+  margin-top: 0.4em;
+  width: 100%;
+  max-width: 80%;
+} */
+
 /* NAVBAR */
 
 .navbar {
@@ -292,13 +300,21 @@ small {
 /* BOOK */
 
 .book {
-  display: flex;
+  position: relative;
   background-color: var(--bg-color);
   margin-bottom: 1em;
   color: var(--nav-text-color);
   padding: 1.5em;
   border-radius: 5px;
   max-width: 1100px;
+}
+
+.inner-container {
+  display: flex;
+}
+
+.remove-book-data {
+  display: none;
 }
 
 .book__thumbnail {
@@ -334,12 +350,18 @@ small {
   display: block;
   background-color: transparent;
   border: 1px solid var(--accent-color);
-
   margin: 1em auto;
 }
 
 .btn--add-item i {
   margin-right: 10px;
+}
+
+.btn--delete-item {
+  display: none;
+  background-color: transparent;
+  margin: 1em auto;
+  border: 1px solid red;
 }
 
 .book__year {
@@ -353,4 +375,67 @@ small {
 .no-result {
   font-size: 2rem;
   font-weight: 400;
+}
+
+/* BOOK CONTROLS */
+
+.book__controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--accent-color);
+  box-shadow: inset 3px 0 10px -6px red;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.remove-controls {
+  display: none;
+}
+
+.book__controls i {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  cursor: pointer;
+}
+.book__controls i:hover {
+  background-color: var(--bg-color);
+}
+
+/* EDIT FORM */
+
+.edit-form {
+  display: none;
+  width: 100%;
+}
+
+.add-edit-form {
+  display: block;
+}
+
+.edit-form small {
+  display: block;
+  margin: auto;
+  margin-top: 0.4em;
+  width: 100%;
+  max-width: 80%;
+}
+
+.edit-form__input {
+  width: 100%;
+  max-width: 80%;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em;
+  font-size: 1rem;
+  margin: auto;
+  margin-top: 0.8em;
 }
