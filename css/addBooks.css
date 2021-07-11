@@ -307,6 +307,7 @@ small {
   padding: 1.5em;
   border-radius: 5px;
   max-width: 1100px;
+  min-height: 300px;
 }
 
 .inner-container {
@@ -393,10 +394,6 @@ small {
   border-bottom-right-radius: 10px;
 }
 
-.remove-controls {
-  display: none;
-}
-
 .book__controls i {
   display: flex;
   justify-content: center;
@@ -406,8 +403,21 @@ small {
   padding: 10px;
   cursor: pointer;
 }
+
 .book__controls i:hover {
   background-color: var(--bg-color);
+}
+
+.remove-controls {
+  display: none;
+}
+
+.book__controls .cancel-btn {
+  display: none;
+}
+
+.book__controls .add-cancel-btn {
+  display: block;
 }
 
 /* EDIT FORM */

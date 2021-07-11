@@ -23,6 +23,7 @@ const app = {
         break;
     }
   },
+
   createLibrary: () => {
     let form = document.querySelector(".create-library__form");
     form.addEventListener("submit", (ev) => {
@@ -58,6 +59,14 @@ const app = {
     select.innerHTML = "";
     select.appendChild(df);
     app.displayStoredBooks();
+
+    // Store to local storage currently selected library
+    let selectedLibrary = [
+      {
+        title: select.value,
+      },
+    ];
+    localStorage.setItem("selectedLibrary", JSON.stringify(selectedLibrary));
   },
 
   displayStoredBooks: () => {
@@ -221,30 +230,30 @@ const app = {
       });
 
       localStorage.setItem("libraries", JSON.stringify(updatedLibraries));
-      app.addControlsToStoredBook(addedBook.id);
+      app.addControlsToDisplayedBook(addedBook.id);
     }
   },
 
-  addControlsToStoredBook: (storedBookId) => {
-    console.log(storedBookId);
-    const storedBook = document.getElementById(storedBookId);
+  addControlsToDisplayedBook: (storedBookId) => {
+    const displayedBook = document.getElementById(storedBookId);
     const bookControls = document.createElement("div");
     bookControls.classList.add("book__controls");
-    bookControls.innerHTML = `<i class="fas fa-ban" id="cancel-edit" style="display:none"></i>
+    bookControls.innerHTML = `
+    <i class="fas fa-ban cancel-btn" title="cancel"></i>
     <div class="controls-container">
-    <i class="fas fa-pencil-alt" title="Edit" id="edit"></i>
-    <i class="fas fa-tags" title="Tags" id="tags"></i>
-    <i class="fas fa-sticky-note" title="Add Notes" id="notes"></i>
-    <i class="fas fa-dollar-sign" title="Add Price" id="price"></i>
-    <i class="fas fa-cart-plus" title="Purchase" id="purchase"></i>
-    <i class="fas fa-trash-alt" title="Delete" id="delete"></i>
+      <i class="fas fa-pencil-alt" title="Edit" id="edit"></i>
+      <i class="fas fa-tags" title="Tags" id="tags"></i>
+      <i class="fas fa-sticky-note" title="Add Notes" id="notes"></i>
+      <i class="fas fa-dollar-sign" title="Add Price" id="price"></i>
+      <i class="fas fa-cart-plus" title="Purchase" id="purchase"></i>
+      <i class="fas fa-trash-alt" title="Delete" id="delete"></i>
     </div>
     `;
-    storedBook.append(bookControls);
+    displayedBook.append(bookControls);
 
-    const addItemBtn = storedBook.querySelector(".btn--add-item");
+    const addItemBtn = displayedBook.querySelector(".btn--add-item");
     addItemBtn.style.display = "none";
-    const deleteItemBtn = storedBook.querySelector(".btn--delete-item");
+    const deleteItemBtn = displayedBook.querySelector(".btn--delete-item");
     deleteItemBtn.style.display = "block";
 
     deleteItemBtn.addEventListener("click", (ev) => {
@@ -255,6 +264,7 @@ const app = {
       if (ev.target.closest("i")) {
         const action = ev.target.id;
         app.editStoredBook(action, storedBookId);
+        return;
       } else {
         return;
       }
@@ -298,15 +308,60 @@ const app = {
     authorInput.value = authorText.textContent;
     let descriptionInput = editForm.querySelector(".description-input");
     descriptionInput.value = descriptionText.textContent;
+    console.log("hi");
 
     editForm.addEventListener("keyup", (ev) => {
       if (ev.code === "Enter") {
         titleText.textContent = titleInput.value;
         authorText.textContent = authorInput.value;
         descriptionText.textContent = descriptionInput.value;
-        app.changeBookInfo(bookId); // Think about this! Doesnt look right even though it works
+        // Remove edit inputs and show book data
+        const editForm = book.querySelector(".edit-form");
+        const bookData = book.querySelector(".inner-container");
+        editForm.classList.remove("add-edit-form");
+        bookData.classList.remove("remove-book-data");
+
+        // Show book controls
+        let controls = book.querySelector(".controls-container");
+        controls.classList.remove("remove-controls");
+        // Remove cancel button
+        let cancelBtn = book.querySelector(".cancel-btn");
+        cancelBtn.classList.remove("add-cancel-btn");
+        console.log("hello");
+
+        let updatedInfo = {
+          title: titleText.textContent,
+          author: authorText.textContent,
+          description: descriptionText.textContent,
+        };
+        app.updateBookInfoInStore(updatedInfo, bookId);
       }
     });
+  },
+
+  updateBookInfoInStore: (updatedInfo, bookId) => {
+    app.getStore();
+    const selectedLibrary = JSON.parse(localStorage.getItem("selectedLibrary"));
+    const library = selectedLibrary[0].title;
+    const storedLibrary = app.libraries.filter((lib) => lib.name === library);
+    let books = storedLibrary[0].books;
+    const bookToUpdate = books.filter((book) => book.id === bookId);
+    const updatedBook = {
+      ...bookToUpdate[0],
+      ...updatedInfo,
+    };
+
+    const updatedBooksArr = books.map((book) =>
+      book.id === bookId ? updatedBook : book
+    );
+
+    const updatedLibrary = app.libraries.map((lib) =>
+      lib.name === library
+        ? { ...lib, books: (lib.books = updatedBooksArr) }
+        : lib
+    );
+
+    localStorage.setItem("libraries", JSON.stringify(updatedLibrary));
   },
 
   toggleEditForm: (bookId) => {
@@ -320,11 +375,23 @@ const app = {
     editForm.classList.toggle("add-edit-form");
     // Toggle on/off class for book data container
     bookData.classList.toggle("remove-book-data");
+    //Toggle other controls and cancel button
 
-    // book
-    //   .querySelector(".controls-container")
-    //   .classList.toggle("remove-controls");
-    // book.querySelector("#cancel-edit").style.display = "block";
+    let controls = book.querySelector(".controls-container");
+    controls.classList.toggle("remove-controls");
+
+    let cancelBtn = book.querySelector(".cancel-btn");
+    cancelBtn.classList.toggle("add-cancel-btn");
+
+    //When user clicks cancel button, remove cancel button and show book controls
+    cancelBtn.addEventListener("click", (ev) => {
+      console.log("hello");
+      controls.classList.remove("remove-controls");
+      cancelBtn.classList.remove("add-cancel-btn");
+      // Remove edit form and show book data
+      editForm.classList.remove("add-edit-form");
+      bookData.classList.remove("remove-book-data");
+    });
   },
   addBookTags: (bookId) => {
     console.log(bookId);
@@ -386,9 +453,14 @@ const app = {
 
   addBooksPageUI: () => {
     // Update title depending on which library has been selected
-    const selectedLibrary = JSON.parse(
-      localStorage.getItem("selectedLibrary")
-    )[0].title;
+    let selectedLibrary = JSON.parse(localStorage.getItem("selectedLibrary"));
+    if (selectedLibrary === null) {
+      console.log("Please add a library first");
+      return;
+    }
+
+    selectedLibrary = selectedLibrary[0].title;
+
     document.querySelector(".add-books__title").textContent =
       "Add Books to" + " " + selectedLibrary;
     // Select button container (Search / Manual Entry Buttons)
