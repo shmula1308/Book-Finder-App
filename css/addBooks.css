@@ -408,6 +408,10 @@ small {
   background-color: var(--bg-color);
 }
 
+.control-active {
+  background-color: var(--bg-color);
+}
+
 .remove-controls {
   display: none;
 }
@@ -448,4 +452,136 @@ small {
   font-size: 1rem;
   margin: auto;
   margin-top: 0.8em;
+}
+
+/* TAG OPTION - INPUT */
+
+.tag-input-container {
+  width: 100%;
+  margin-bottom: 0.5em;
+  max-height: 0;
+  overflow-y: hidden;
+  transition: all 0.25s;
+}
+
+.open {
+  max-height: 140px;
+  transition: all 0.4s;
+}
+
+.tag-small {
+  display: block;
+  font-size: 0.7rem;
+  margin: 0;
+  margin-top: 0.4em;
+  width: 100%;
+  max-width: 80%;
+}
+
+.tag-input {
+  width: 100%;
+  max-width: 80%;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em;
+  font-size: 1rem;
+  margin-top: 0.8em;
+}
+
+.tag {
+  display: inline-block;
+  background-color: salmon;
+  color: white;
+  padding: 5px;
+  border-radius: 10px;
+  margin-right: 5px;
+}
+
+/* NOTES INPUT */
+
+.notes-input-container {
+  width: 100%;
+  margin-bottom: 0.5em;
+  max-height: 0;
+  overflow-y: hidden;
+  transition: all 0.25s;
+}
+
+.notes-input-container small {
+  margin: 0 0 0.5em 0;
+}
+
+.notes-input-container textarea {
+  resize: none;
+}
+
+.notes-input {
+  width: 100%;
+  max-width: 90%;
+  min-height: 100px;
+}
+
+.notes {
+  display: none;
+  position: relative;
+  width: 100%;
+  max-width: 90%;
+  min-height: 100px;
+  background-color: var(--main-title-color);
+  padding: 1em 1.5em;
+  font-size: 1rem;
+  color: rgb(121, 116, 116);
+  margin-top: 1.2em;
+}
+
+.notes i {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  color: #9c9696;
+  opacity: 0.6;
+}
+
+.open-notes {
+  max-height: 140px;
+  transition: all 0.4s;
+}
+
+/* PRICE INPUT */
+
+.price-input-container {
+  width: 100%;
+  margin-bottom: 0.5em;
+  max-height: 0;
+  overflow-y: hidden;
+  transition: all 0.25s;
+}
+
+.open-price-input {
+  max-height: 140px;
+  transition: all 0.4s;
+}
+
+.price-small {
+  display: block;
+  font-size: 0.7rem;
+  margin: 0;
+  margin-top: 0.4em;
+  width: 100%;
+  max-width: 80%;
+}
+
+.price-input {
+  width: 100%;
+  max-width: 80%;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em;
+  font-size: 1rem;
+  margin-top: 0.8em;
+}
+
+.price-tag {
+  margin-top: 0.5em;
+  color: var(--accent-color);
 }

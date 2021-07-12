@@ -162,12 +162,26 @@ const app = {
       <div class="inner-container">
         <div class="book__thumbnail">
           <img src=${b.thumbnail} width='140px' alt="Book Thumbnail">
-          <button class='btn btn--add-item'><i class="fas fa-plus-circle"></i>Add Item</button>
+          <button class='btn btn--add-item'> + Add Item</button>
           <button class="btn btn--delete-item" id=${
             "deleteBook_" + i
           }>Delete Item</button>
         </div>
         <div class="book__info">
+          <div class="tag-input-container">
+            <small for="tags" class="tag-small">Tags <span>(separate with comma / press enter to save)</small></label>
+            <input class="tag-input" type="text" name="tags" id=${"tag_" + i}>
+          </div>
+          <div class="notes-input-container">
+              <small for="notes" class="notes-small">Notes (press enter to save)</small>
+              <textarea class="notes-input" type="text" name="notes"></textarea>
+          </div>
+          <div class="price-input-container">
+            <small for="price" class="price-small">Price (cost or price of item / press enter to save)</small>
+            <input class="price-input" type="text" name="price" id=${
+              "price_" + i
+            }>
+          </div> 
           <h4 class="book__title">${b.title}</h4>
           <span class="book__author">${b.authors}</span>
           <div class="book__data">
@@ -181,8 +195,12 @@ const app = {
               !b.isbn[1] ? "no data" : b.isbn[1].identifier
             }</span>
           </div>
+          <div class="price-tag">$30.00</div>
           <p class="book__description">${b.description}</p>
-        </div>
+          <div class="tags"></div>
+          <div class="notes">
+            <i class="fas fa-sticky-note" title="Add Notes"></i>
+          </div>
       </div>`;
 
       df.append(book);
@@ -197,6 +215,7 @@ const app = {
   addBookToLibrary: (ev) => {
     if (ev.target.closest("button")) {
       const addedBook = ev.target.parentElement.parentElement.parentElement;
+      console.log(addedBook, ev.target);
       const book = {
         image: addedBook.querySelector("img").src,
         title: addedBook.querySelector(".book__title").textContent,
@@ -233,7 +252,7 @@ const app = {
       app.addControlsToDisplayedBook(addedBook.id);
     }
   },
-
+  // Try to solve this by adding it to the HTML then hide it.
   addControlsToDisplayedBook: (storedBookId) => {
     const displayedBook = document.getElementById(storedBookId);
     const bookControls = document.createElement("div");
@@ -277,21 +296,36 @@ const app = {
         app.changeBookInfo(bookId);
         break;
       case "tags":
-        app.addBookTags(bookId);
+        app.highlightSelectedBtn(action);
+        app.getBookTags(bookId);
         break;
       case "notes":
+        app.highlightSelectedBtn(action);
         app.addBookNotes(bookId);
         break;
       case "price":
+        app.highlightSelectedBtn(action);
         app.addBookPrice(bookId);
         break;
       case "purchase":
+        app.highlightSelectedBtn(action);
         app.purchaseBook(bookId);
         break;
       case "delete":
-        app.deleteBook(bookId);
+        app.deleteBookFromStore(bookId);
         break;
     }
+  },
+
+  highlightSelectedBtn: (btnId) => {
+    let selectedBtn = document.getElementById(btnId);
+    selectedBtn.classList.toggle("control-active");
+  },
+
+  deactivateBtn: (bookId) => {
+    const book = document.getElementById(bookId);
+    const controlBtnsArr = book.querySelectorAll(".book__controls i");
+    controlBtnsArr.forEach((btn) => btn.classList.remove("control-active"));
   },
 
   changeBookInfo: (bookId) => {
@@ -346,6 +380,7 @@ const app = {
     const storedLibrary = app.libraries.filter((lib) => lib.name === library);
     let books = storedLibrary[0].books;
     const bookToUpdate = books.filter((book) => book.id === bookId);
+
     const updatedBook = {
       ...bookToUpdate[0],
       ...updatedInfo,
@@ -393,23 +428,148 @@ const app = {
       bookData.classList.remove("remove-book-data");
     });
   },
-  addBookTags: (bookId) => {
-    console.log(bookId);
-  },
-  addBookNotes: (bookId) => {
-    console.log(bookId);
-  },
-  addBookPrice: (bookId) => {
-    console.log(bookId);
-  },
-  purchaseBook: (bookId) => {
-    console.log(bookId);
-  },
-  deleteBook: (bookId) => {
-    console.log(bookId);
+
+  getBookTags: (bookId) => {
+    const book = document.getElementById(bookId);
+    const tagInputContainer = book.querySelector(".tag-input-container");
+    tagInputContainer.classList.toggle("open");
+
+    const tagInput = tagInputContainer.querySelector(".tag-input");
+
+    tagInput.addEventListener("keyup", (ev) => {
+      let tags = ev.target.value.split(",");
+      if (ev.code === "Enter") {
+        tagInputContainer.classList.remove("open");
+        app.deactivateBtn(bookId);
+        // Update local storage
+        let updatedInfo = {
+          tags: [...tags],
+        };
+        app.updateBookInfoInStore(updatedInfo, bookId);
+      }
+
+      if (ev.target.value.length === 0) {
+        document.querySelector(".tags").innerHTML = "";
+        return;
+      }
+
+      app.addTagsToUI(tags, bookId);
+    });
   },
 
-  removeControlsFromStoredBook: () => {},
+  addTagsToUI: (tags, bookId) => {
+    const book = document.getElementById(bookId);
+    book.querySelector(".tags").innerHTML = "";
+    let df = new DocumentFragment();
+
+    tags.map((tag) => {
+      let span = document.createElement("span");
+      span.classList.add("tag");
+      span.textContent = tag;
+      df.append(span);
+    });
+    book.querySelector(".tags").append(df);
+  },
+
+  addBookNotes: (bookId) => {
+    // Opens the input for notes
+    const book = document.getElementById(bookId);
+    const notesInputContainer = book.querySelector(".notes-input-container");
+    notesInputContainer.classList.toggle("open-notes");
+
+    const notesInput = notesInputContainer.querySelector(".notes-input");
+    notesInput.addEventListener("keyup", (ev) => {
+      // if (ev.code === "Enter" && ev.target.value.trim().length === 0) {
+      //   notesWrapper.style.display = "block";
+      //   notesInputContainer.classList.remove("open-notes");
+      //   return;
+      // }
+
+      if (ev.code === "Enter") {
+        let notesWrapper = book.querySelector(".notes");
+
+        if (ev.target.value.trim().length === 0) {
+          notesWrapper.style.display = "none";
+          notesInputContainer.classList.remove("open-notes");
+          app.deactivateBtn(bookId);
+          return;
+        }
+
+        notesWrapper.innerHTML = "";
+        notesWrapper.innerHTML = `<i class="fas fa-sticky-note" title="Add Notes"></i> ${ev.target.value}`;
+        notesWrapper.style.display = "block";
+        notesInputContainer.classList.remove("open-notes");
+        app.deactivateBtn(bookId);
+
+        // Update local storage
+
+        let updatedInfo = {
+          notes: ev.target.value,
+        };
+        app.updateBookInfoInStore(updatedInfo, bookId);
+      }
+    });
+  },
+
+  addBookPrice: (bookId) => {
+    // Opens the input for price
+    const book = document.getElementById(bookId);
+    const priceInputContainer = book.querySelector(".price-input-container");
+    priceInputContainer.classList.toggle("open-price-input");
+
+    const priceInput = priceInputContainer.querySelector(".price-input");
+    priceInput.addEventListener("keyup", (ev) => {
+      if (ev.code === "Enter") {
+        let priceWrapper = book.querySelector(".price-tag");
+        priceWrapper.textContent = "$" + ev.target.value;
+        app.deactivateBtn(bookId);
+        priceInputContainer.classList.remove("open-price-input");
+
+        // Update local storage
+        let updatedInfo = {
+          price: ev.target.value,
+        };
+        app.updateBookInfoInStore(updatedInfo, bookId);
+      }
+    });
+  },
+
+  purchaseBook: (bookId) => {
+    const book = document.getElementById(bookId);
+    let title = book.querySelector(".book__title");
+    let titleQuery = title.textContent.split(" ").join("+");
+    let link = document.createElement("a");
+    link.target = "_blank";
+    link.href = `https://www.amazon.com/s?k=${titleQuery}&i=stripbooks-intl-ship&ref=nb_sb_noss_2`;
+    link.click();
+  },
+
+  deleteBookFromStore: (bookId) => {
+    app.getStore();
+    const selectedLibrary = JSON.parse(localStorage.getItem("selectedLibrary"));
+    const library = selectedLibrary[0].title;
+    const storedLibrary = app.libraries.filter((lib) => lib.name === library);
+    let books = storedLibrary[0].books;
+    const updatedBooksArr = books.filter((book) => book.id !== bookId);
+
+    const updatedLibrary = app.libraries.map((lib) =>
+      lib.name === library
+        ? { ...lib, books: (lib.books = updatedBooksArr) }
+        : lib
+    );
+    localStorage.setItem("libraries", JSON.stringify(updatedLibrary));
+    app.removeControlsFromDeletedBook(bookId);
+  },
+
+  removeControlsFromDeletedBook: (bookId) => {
+    const displayedBook = document.getElementById(bookId);
+    let bookControls = displayedBook.querySelector(".book__controls");
+    bookControls.remove();
+    const addItemBtn = displayedBook.querySelector(".btn--add-item");
+    addItemBtn.style.display = "block";
+    const deleteItemBtn = displayedBook.querySelector(".btn--delete-item");
+    deleteItemBtn.style.display = "none";
+  },
 
   prepareBookData: (book) => {
     let bookObj = {
