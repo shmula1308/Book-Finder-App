@@ -135,7 +135,6 @@ const app = {
       displayBooksContainer.append(p);
       return;
     }
-
     let df = new DocumentFragment();
 
     result.items.forEach((data, i) => {
@@ -143,7 +142,7 @@ const app = {
 
       let book = document.createElement("div");
       book.classList.add("book");
-      book.id = "book_" + i;
+      book.id = data.id;
       book.innerHTML = `
       <form class="edit-form">
         <input class="edit-form__input title-input" type="text" name="title" id=${
@@ -162,9 +161,8 @@ const app = {
       <div class="inner-container">
         <div class="book__thumbnail">
           <img src=${b.thumbnail} width='140px' alt="Book Thumbnail">
-          <button class='btn btn--add-item'> + Add Item</button>
-          <button class="btn btn--delete-item" id=${
-            "deleteBook_" + i
+          <button class='btn btn--add-item' data-id="addBook"> + Add Item</button>
+          <button class="btn btn--delete-item" data-id="deleteBook"
           }>Delete Item</button>
         </div>
         <div class="book__info">
@@ -195,7 +193,7 @@ const app = {
               !b.isbn[1] ? "no data" : b.isbn[1].identifier
             }</span>
           </div>
-          <div class="price-tag">$30.00</div>
+          <div class="price-tag"></div>
           <p class="book__description">${b.description}</p>
           <div class="tags"></div>
           <div class="notes">
@@ -209,13 +207,26 @@ const app = {
     displayBooksContainer.innerHTML = "";
     displayBooksContainer.append(df);
 
-    displayBooksContainer.addEventListener("click", app.addBookToLibrary);
+    displayBooksContainer.addEventListener("click", (ev) => {
+      if (ev.target.dataset.id === "addBook") {
+        app.addBookToLibrary(ev);
+      }
+      if (ev.target.dataset.id === "deleteBook") {
+        let bookId = ev.target.parentElement.parentElement.parentElement.id;
+        console.log(bookId);
+        app.deleteBookFromStore(bookId);
+        const displayedBook = document.getElementById(bookId);
+        const addItemBtn = displayedBook.querySelector(".btn--add-item");
+        addItemBtn.style.display = "block";
+        const deleteItemBtn = displayedBook.querySelector(".btn--delete-item");
+        deleteItemBtn.style.display = "none";
+      }
+    });
   },
 
   addBookToLibrary: (ev) => {
     if (ev.target.closest("button")) {
       const addedBook = ev.target.parentElement.parentElement.parentElement;
-      console.log(addedBook, ev.target);
       const book = {
         image: addedBook.querySelector("img").src,
         title: addedBook.querySelector(".book__title").textContent,
@@ -238,6 +249,16 @@ const app = {
       const storedLibrary = app.libraries.filter(
         (library) => library.name === selectedLibrary
       );
+
+      let libraryHasBook = storedLibrary[0].books.filter(
+        (storedBook) => storedBook.id === book.id
+      );
+
+      if (libraryHasBook.length) {
+        app.displayAlert("warning", "Item already exists in your library!");
+        return;
+      }
+
       let updatedLibrary = storedLibrary[0].books.push(book);
 
       const updatedLibraries = app.libraries.map((library) => {
@@ -249,9 +270,30 @@ const app = {
       });
 
       localStorage.setItem("libraries", JSON.stringify(updatedLibraries));
+
+      app.displayAlert(
+        "alert-succes",
+        "Item was succesfully added to your library!"
+      );
       app.addControlsToDisplayedBook(addedBook.id);
     }
   },
+
+  displayAlert: (alertClass, alertMessage) => {
+    const alertContainer = document.querySelector(".alert");
+    const alertMsg = document.querySelector(".alert__message");
+    alertContainer.classList.add(alertClass);
+    alertMsg.textContent = alertMessage;
+    alertContainer.addEventListener("click", (ev) => {
+      if (ev.target.closest("i")) {
+        alertContainer.classList.remove(alertClass);
+      }
+    });
+    setTimeout(() => {
+      alertContainer.classList.remove(alertClass);
+    }, 3000);
+  },
+
   // Try to solve this by adding it to the HTML then hide it.
   addControlsToDisplayedBook: (storedBookId) => {
     const displayedBook = document.getElementById(storedBookId);
@@ -274,10 +316,6 @@ const app = {
     addItemBtn.style.display = "none";
     const deleteItemBtn = displayedBook.querySelector(".btn--delete-item");
     deleteItemBtn.style.display = "block";
-
-    deleteItemBtn.addEventListener("click", (ev) => {
-      console.log(ev.target);
-    });
 
     bookControls.addEventListener("click", (ev) => {
       if (ev.target.closest("i")) {
@@ -308,7 +346,6 @@ const app = {
         app.addBookPrice(bookId);
         break;
       case "purchase":
-        app.highlightSelectedBtn(action);
         app.purchaseBook(bookId);
         break;
       case "delete":
@@ -342,7 +379,6 @@ const app = {
     authorInput.value = authorText.textContent;
     let descriptionInput = editForm.querySelector(".description-input");
     descriptionInput.value = descriptionText.textContent;
-    console.log("hi");
 
     editForm.addEventListener("keyup", (ev) => {
       if (ev.code === "Enter") {
@@ -479,12 +515,6 @@ const app = {
 
     const notesInput = notesInputContainer.querySelector(".notes-input");
     notesInput.addEventListener("keyup", (ev) => {
-      // if (ev.code === "Enter" && ev.target.value.trim().length === 0) {
-      //   notesWrapper.style.display = "block";
-      //   notesInputContainer.classList.remove("open-notes");
-      //   return;
-      // }
-
       if (ev.code === "Enter") {
         let notesWrapper = book.querySelector(".notes");
 
@@ -558,6 +588,7 @@ const app = {
         : lib
     );
     localStorage.setItem("libraries", JSON.stringify(updatedLibrary));
+    app.displayAlert("warning", "Items was deleted from your library!");
     app.removeControlsFromDeletedBook(bookId);
   },
 
