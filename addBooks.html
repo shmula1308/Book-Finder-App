@@ -106,15 +106,13 @@
               <small>Separate author(s) with comma.</small>
               <textarea class="manual-entry-form__input" name="description" id="description" cols="30" rows="10" placeholder='Description'></textarea>
               <div class="published-date-container">
-                <input class="manual-entry-form__input--date" type="text" name="year" maxlength="4" placeholder="YYYY">
-                <input class="manual-entry-form__input--date" type="text" name="month" maxlength="2" placeholder="MM">
-                <input class="manual-entry-form__input--date" type="text" name="day" maxlength="2" placeholder="DD">
+                <input class="manual-entry-form__input--date" type="number" name="year" placeholder="YYYY" id="year">
+                <input class="manual-entry-form__input--date" type="number" name="month" maxlength="2" placeholder="MM" id="month">
+                <input class="manual-entry-form__input--date" type="number" name="day" maxlength="2" placeholder="DD" id="day">
               </div>
-              <input class="manual-entry-form__input" type="text" name="publisher" placeholder="Publisher">
-              <input class="manual-entry-form__input" type="text" name="isbn13" maxLength="13" placeholder="ISBN 13">
-              <small>Numbers Only</small>
-              <input class=" manual-entry-form__input manual-entry-form__input--pages" type="text" name="pages"  placeholder="Pages">
-              <small>Numbers only</small>
+              <input class="manual-entry-form__input" type="text" name="publisher" placeholder="Publisher" id="publisher">
+              <input class="manual-entry-form__input" type="number" name="isbn13" placeholder="ISBN 13" id="misbn">
+              <input class=" manual-entry-form__input manual-entry-form__input--pages" type="number" name="pages"  placeholder="Pages" id="pages">
               <button class='btn btn--submit' type="submit">Submit</button>
             </form>
         </main>

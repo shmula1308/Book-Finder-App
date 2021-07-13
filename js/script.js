@@ -209,7 +209,22 @@ const app = {
 
     displayBooksContainer.addEventListener("click", (ev) => {
       if (ev.target.dataset.id === "addBook") {
-        app.addBookToLibrary(ev);
+        const addedBook = ev.target.parentElement.parentElement.parentElement;
+        const book = {
+          image: addedBook.querySelector("img").src,
+          title: addedBook.querySelector(".book__title").textContent,
+          author: addedBook.querySelector(".book__author").textContent,
+          year: addedBook.querySelector(".book__year").textContent,
+          pages: addedBook.querySelector(".book__pages").textContent,
+          publisher: addedBook.querySelector(".book__publisher").textContent,
+          isbn10: addedBook.querySelector(".book__isbn10").textContent,
+          isbn13: addedBook.querySelector(".book__isbn13").textContent,
+          description:
+            addedBook.querySelector(".book__description").textContent,
+          id: addedBook.id,
+        };
+
+        app.addBookToLibrary(book, addedBook.id);
       }
       if (ev.target.dataset.id === "deleteBook") {
         let bookId = ev.target.parentElement.parentElement.parentElement.id;
@@ -224,59 +239,48 @@ const app = {
     });
   },
 
-  addBookToLibrary: (ev) => {
-    if (ev.target.closest("button")) {
-      const addedBook = ev.target.parentElement.parentElement.parentElement;
-      const book = {
-        image: addedBook.querySelector("img").src,
-        title: addedBook.querySelector(".book__title").textContent,
-        author: addedBook.querySelector(".book__author").textContent,
-        year: addedBook.querySelector(".book__year").textContent,
-        pages: addedBook.querySelector(".book__pages").textContent,
-        publisher: addedBook.querySelector(".book__publisher").textContent,
-        isbn10: addedBook.querySelector(".book__isbn10").textContent,
-        isbn13: addedBook.querySelector(".book__isbn13").textContent,
-        description: addedBook.querySelector(".book__description").textContent,
-        id: addedBook.id,
-      };
+  addBookToLibrary: (book, bookId) => {
+    const selectedLibrary = JSON.parse(
+      localStorage.getItem("selectedLibrary")
+    )[0].title;
 
-      const selectedLibrary = JSON.parse(
-        localStorage.getItem("selectedLibrary")
-      )[0].title;
+    app.getStore();
 
-      app.getStore();
+    const storedLibrary = app.libraries.filter(
+      (library) => library.name === selectedLibrary
+    );
 
-      const storedLibrary = app.libraries.filter(
-        (library) => library.name === selectedLibrary
-      );
+    let libraryHasBook = storedLibrary[0].books.filter(
+      (storedBook) => storedBook.id === book.id
+    );
 
-      let libraryHasBook = storedLibrary[0].books.filter(
-        (storedBook) => storedBook.id === book.id
-      );
-
-      if (libraryHasBook.length) {
-        app.displayAlert("warning", "Item already exists in your library!");
-        return;
-      }
-
-      let updatedLibrary = storedLibrary[0].books.push(book);
-
-      const updatedLibraries = app.libraries.map((library) => {
-        if (library.title === selectedLibrary) {
-          return updatedLibrary;
-        } else {
-          return library;
-        }
-      });
-
-      localStorage.setItem("libraries", JSON.stringify(updatedLibraries));
-
-      app.displayAlert(
-        "alert-succes",
-        "Item was succesfully added to your library!"
-      );
-      app.addControlsToDisplayedBook(addedBook.id);
+    if (libraryHasBook.length) {
+      app.displayAlert("warning", "Item already exists in your library!");
+      return;
     }
+
+    let updatedLibrary = storedLibrary[0].books.push(book);
+
+    const updatedLibraries = app.libraries.map((library) => {
+      if (library.title === selectedLibrary) {
+        return updatedLibrary;
+      } else {
+        return library;
+      }
+    });
+
+    localStorage.setItem("libraries", JSON.stringify(updatedLibraries));
+
+    app.displayAlert(
+      "alert-succes",
+      "Item was succesfully added to your library!"
+    );
+
+    const manualForm = document.querySelector(".manual-entry-form");
+
+    if (manualForm) return;
+
+    app.addControlsToDisplayedBook(bookId);
   },
 
   displayAlert: (alertClass, alertMessage) => {
@@ -654,6 +658,7 @@ const app = {
 
     document.querySelector(".add-books__title").textContent =
       "Add Books to" + " " + selectedLibrary;
+
     // Select button container (Search / Manual Entry Buttons)
     const addBooksMethodButtons = document.querySelector(".add-books__list");
     addBooksMethodButtons.addEventListener("click", (ev) => {
@@ -680,6 +685,8 @@ const app = {
         //Show Manual Entry Form
         const manualEntryForm = document.querySelector(".manual-entry-form");
         manualEntryForm.style.display = "block";
+
+        app.addBooksManually();
       }
       if (clickedButton.id === "searchBtn") {
         // Show Search Form
@@ -726,35 +733,50 @@ const app = {
     });
   },
 
+  addBooksManually: () => {
+    const form = document.querySelector(".manual-entry-form");
+    form.addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const title = document.getElementById("title");
+      const authors = document.getElementById("authors");
+      const description = document.getElementById("description");
+      let year = document.getElementById("year");
+      let month = document.getElementById("month");
+      let day = document.getElementById("day");
+      const publisher = document.getElementById("publisher");
+      const isbn = document.getElementById("misbn");
+      const pages = document.getElementById("pages");
+
+      year = !year.value ? "" : year.value;
+      month = !month.value ? "" : month.value;
+      day = !day.value ? "" : day.value;
+
+      const yearPublished = [year, month, day]
+        .filter((str) => str !== "")
+        .join("-");
+
+      const book = {
+        title: title.value,
+        author: authors.value,
+        description: description.value,
+        year: yearPublished,
+        publisher: publisher.value,
+        image: "images/book-image-placeholder.png",
+        isbn10: "",
+        isbn13: isbn.value,
+        pages: pages.value,
+        id: "id_" + Math.floor(Math.random() * Date.now()),
+      };
+
+      app.addBookToLibrary(book);
+      app.displayAlert("alert-succes", "Your item was succesfully created!");
+      form.reset();
+    });
+  },
+
   err: (error) => {
     console.log(error.message);
   },
 };
 
 app.init();
-
-// const tagInput = document.querySelector(".tag-input");
-// function appendTags(tags) {
-//   document.querySelector('.tags').innerHTML = "";
-//   let df = new DocumentFragment()
-
-//   tags.map(tag => {
-//     let span = document.createElement('span');
-//     span.classList.add('tag');
-//     span.textContent = tag
-//     df.append(span)
-
-//   })
-//    document.querySelector('.tags').append(df)
-// }
-
-// tagInput.addEventListener('keyup', (ev)=> {
-//   if(ev.target.value.length === 0) {
-//     document.querySelector('.tags').innerHTML = "";
-//     return;
-//   }
-//     tags = ev.target.value.split(",")
-//     document.querySelector('.tags').innerHTML = "";
-//     appendTags(tags);
-//   CODE FOR TAG BUTTONS
-// })
