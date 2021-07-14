@@ -12,7 +12,7 @@ const app = {
     switch (page) {
       case "librariesPage":
         app.displayStoredLibraries();
-        app.displayStoredBooks();
+        // app.displayStoredBooks();
         break;
       case "createLibraryPage":
         app.createLibrary();
@@ -58,26 +58,238 @@ const app = {
     });
     select.innerHTML = "";
     select.appendChild(df);
-    app.displayStoredBooks();
 
-    // Store to local storage currently selected library
+    app.getSelectedLibrary();
+
+    app.displayStoredBooks();
+  },
+
+  getSelectedLibrary: () => {
+    const select = document.querySelector(".select");
     let selectedLibrary = [
       {
         title: select.value,
       },
     ];
-    localStorage.setItem("selectedLibrary", JSON.stringify(selectedLibrary));
-  },
 
-  displayStoredBooks: () => {
-    document.querySelector(".select").addEventListener("change", (ev) => {
-      app.getStore();
+    localStorage.setItem("selectedLibrary", JSON.stringify(selectedLibrary));
+
+    select.addEventListener("change", (ev) => {
       let selectedLibrary = [
         {
           title: ev.target.value,
         },
       ];
       localStorage.setItem("selectedLibrary", JSON.stringify(selectedLibrary));
+      app.displayStoredBooks();
+    });
+  },
+
+  displayStoredBooks: () => {
+    let selectedLibrary = JSON.parse(localStorage.getItem("selectedLibrary"));
+    selectedLibrary = selectedLibrary[0].title;
+    const displayBooksContainer = document.querySelector(
+      ".display-books-container"
+    );
+
+    app.getStore();
+    let library = app.libraries.filter((lib) => lib.name === selectedLibrary);
+
+    let df = new DocumentFragment();
+    console.log(library);
+    library[0].books.forEach((data, i) => {
+      let book = document.createElement("div");
+      book.classList.add("book");
+      book.id = data.id;
+      book.innerHTML = `
+      
+      
+      <div class="edit-form">
+          <input class="manual-entry-form__input title-input" type="text" name="title" placeholder="Title">
+          <input class="manual-entry-form__input author-input" type="text" name="authors" placeholder="Authors">
+          <small>Separate author(s) with comma.</small>
+          <textarea class="manual-entry-form__input description-input" name="description" id="description" cols="30" rows="10" placeholder='Description'></textarea>
+          <small>(press enter to save)</small>
+      </div> 
+      <div class="inner-container">
+        <div class="book__thumbnail">
+          <img src="${data.image}" width='140px' alt="Book Thumbnail">
+        </div>
+        <div class="book__info">
+        <div class="tag-input-container">
+          <small for="tags" class="tag-small">Tags <span>(separate with comma / press enter to save)</small></label>
+          <input class="tag-input" type="text" name="tags" id=${"tag_" + i}>
+        </div>
+         <div class="notes-input-container">
+            <small for="notes" class="notes-small">Notes (press enter to save)</small>
+            <textarea class="notes-input" type="text" name="notes"></textarea>
+         </div> 
+        <div class="price-input-container">
+          <small for="price" class="price-small">Price (cost or price of item / press enter to save)
+          </small>
+          <input class="price-input" type="text" name="price" id=${
+            "price_" + i
+          }>
+        </div> 
+        <h4 class="book__title">${data.title}</h4>
+        <span class="book__author">${data.author}</span>
+        <div class="book__data">
+          <span class="book__year">${data.year}</span>
+          <span class="book__pages">${data.pages}</span>
+          <span class="book__publisher">(Dial Press Trade Paperback)</span>
+          <span class="book__isbn13">${data.isbn13}</span>
+          <span class="book__isbn10">${data.isbn10}</span>
+        </div>
+        <div class="price-tag">${!data.price ? "" : "$" + data.price}</div>
+        <p class="book__description">${data.description}</p>
+        <div class="tags"></div> 
+        <div class="notes">
+          <i class="fas fa-sticky-note" title="Add Notes"></i>
+        </div>
+      </div>
+    </div>
+    <div class="book__controls">
+      <i class="fas fa-ban cancel-btn" title="cancel"></i>
+      <div class="controls-container">
+        <i class="fas fa-pencil-alt" title="Edit" id="edit"></i>
+        <i class="fas fa-tags" title="Tags" id="tags"></i>
+        <i class="fas fa-sticky-note" title="Add Notes" id="notes"></i>
+        <i class="fas fa-dollar-sign" title="Add Price" id="price"></i>
+        <i class="fas fa-cart-plus" title="Purchase" id="purchase"></i>
+        <i class="fas fa-trash-alt" title="Delete" id="delete"></i>
+      </div>
+    </div>`;
+
+      df.append(book);
+    });
+
+    displayBooksContainer.innerHTML = "";
+    displayBooksContainer.append(df);
+    const bookControls = document.querySelectorAll(".book__controls");
+    bookControls.forEach((bookControl) => {
+      bookControl.addEventListener("click", (ev) => {
+        if (ev.target.closest("i")) {
+          const action = ev.target.id;
+          let bookId = ev.target.parentElement.parentElement.parentElement.id;
+          app.editBookInYourLibraries(action, bookId);
+          return;
+        } else {
+          return;
+        }
+      });
+    });
+  },
+
+  editBookInYourLibraries: (action, bookId) => {
+    switch (action) {
+      case "edit":
+        app.editFormInYourLibraries(bookId);
+        break;
+      case "tags":
+        app.highlightSelectedBtn(action, bookId);
+        app.getBookTags(bookId);
+        break;
+      case "notes":
+        app.highlightSelectedBtn(action, bookId);
+        app.addBookNotes(bookId);
+        break;
+      case "price":
+        app.highlightSelectedBtn(action, bookId);
+        app.addBookPrice(bookId);
+        break;
+      case "purchase":
+        app.purchaseBook(bookId);
+        break;
+      case "delete":
+        app.deleteBookFromStoreAndDOM(bookId);
+        break;
+    }
+  },
+
+  deleteBookFromStoreAndDOM: (bookId) => {
+    app.getStore();
+    const selectedLibrary = JSON.parse(localStorage.getItem("selectedLibrary"));
+    const library = selectedLibrary[0].title;
+    const storedLibrary = app.libraries.filter((lib) => lib.name === library);
+    let books = storedLibrary[0].books;
+    const updatedBooksArr = books.filter((book) => book.id !== bookId);
+
+    const updatedLibrary = app.libraries.map((lib) =>
+      lib.name === library
+        ? { ...lib, books: (lib.books = updatedBooksArr) }
+        : lib
+    );
+    localStorage.setItem("libraries", JSON.stringify(updatedLibrary));
+    app.displayAlert("warning", "Items was deleted from your library!");
+
+    // Remove Book from DOM
+    const domBook = document.getElementById(bookId);
+    domBook.remove();
+  },
+
+  editFormInYourLibraries: (bookId) => {
+    const book = document.getElementById(bookId);
+
+    // Add edit form
+    const editForm = book.querySelector(".edit-form");
+    editForm.classList.toggle("add-edit-form");
+
+    // Remove book data
+    const bookData = book.querySelector(".inner-container");
+    bookData.classList.toggle("remove-book-data");
+
+    // Remove book controls
+    const controls = book.querySelector(".controls-container");
+    controls.classList.toggle("remove-controls");
+
+    //Add cancel button
+    let cancelBtn = book.querySelector(".cancel-btn");
+    cancelBtn.classList.add("add-cancel-btn");
+
+    //When user clicks cancel button, remove cancel button and show book controls
+    cancelBtn.addEventListener("click", (ev) => {
+      controls.classList.remove("remove-controls");
+      cancelBtn.classList.remove("add-cancel-btn");
+      // Remove edit form and show book data
+      editForm.classList.remove("add-edit-form");
+      bookData.classList.remove("remove-book-data");
+    });
+
+    let titleText = book.querySelector(".book__title");
+    let authorText = book.querySelector(".book__author");
+    let descriptionText = book.querySelector(".book__description");
+
+    let titleInput = editForm.querySelector(".title-input");
+    titleInput.value = titleText.textContent;
+    let authorInput = editForm.querySelector(".author-input");
+    authorInput.value = authorText.textContent;
+    let descriptionInput = editForm.querySelector(".description-input");
+    descriptionInput.value = descriptionText.textContent;
+    editForm.addEventListener("keyup", (ev) => {
+      if (ev.code === "Enter") {
+        titleText.textContent = titleInput.value;
+        authorText.textContent = authorInput.value;
+        descriptionText.textContent = descriptionInput.value;
+        // Remove edit inputs and show book data
+        const editForm = book.querySelector(".edit-form");
+        const bookData = book.querySelector(".inner-container");
+        editForm.classList.remove("add-edit-form");
+        bookData.classList.remove("remove-book-data");
+
+        // Show book controls
+        let controls = book.querySelector(".controls-container");
+        controls.classList.remove("remove-controls");
+        // Remove cancel button
+        let cancelBtn = book.querySelector(".cancel-btn");
+        cancelBtn.classList.remove("add-cancel-btn");
+
+        let updatedInfo = {
+          title: titleText.textContent,
+          author: authorText.textContent,
+          description: descriptionText.textContent,
+        };
+        app.updateBookInfoInStore(updatedInfo, bookId);
+      }
     });
   },
 
@@ -102,6 +314,11 @@ const app = {
     const searchForm = document.getElementById("search-form");
     searchForm.addEventListener("submit", (ev) => {
       ev.preventDefault();
+      let selectedLibrary = JSON.parse(localStorage.getItem("selectedLibrary"));
+      if (selectedLibrary == null) {
+        app.displayAlert("warning", "Please create a library first");
+        return;
+      }
       //Search with ISBN number
       let url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${searchInput.value
         .split("-")
@@ -276,10 +493,6 @@ const app = {
       "Item was succesfully added to your library!"
     );
 
-    const manualForm = document.querySelector(".manual-entry-form");
-
-    if (manualForm) return;
-
     app.addControlsToDisplayedBook(bookId);
   },
 
@@ -333,20 +546,21 @@ const app = {
   },
 
   editStoredBook: (action, bookId) => {
+    console.log(action);
     switch (action) {
       case "edit":
         app.changeBookInfo(bookId);
         break;
       case "tags":
-        app.highlightSelectedBtn(action);
+        app.highlightSelectedBtn(action, bookId);
         app.getBookTags(bookId);
         break;
       case "notes":
-        app.highlightSelectedBtn(action);
+        app.highlightSelectedBtn(action, bookId);
         app.addBookNotes(bookId);
         break;
       case "price":
-        app.highlightSelectedBtn(action);
+        app.highlightSelectedBtn(action, bookId);
         app.addBookPrice(bookId);
         break;
       case "purchase":
@@ -358,8 +572,9 @@ const app = {
     }
   },
 
-  highlightSelectedBtn: (btnId) => {
-    let selectedBtn = document.getElementById(btnId);
+  highlightSelectedBtn: (btnId, bookId) => {
+    let book = document.getElementById(bookId);
+    const selectedBtn = book.querySelector("#" + btnId);
     selectedBtn.classList.toggle("control-active");
   },
 
@@ -441,6 +656,7 @@ const app = {
 
   toggleEditForm: (bookId) => {
     // Get book
+    console.log(bookId);
     const book = document.getElementById(bookId);
     // Get edit form
     const editForm = book.querySelector(".edit-form");
@@ -460,7 +676,6 @@ const app = {
 
     //When user clicks cancel button, remove cancel button and show book controls
     cancelBtn.addEventListener("click", (ev) => {
-      console.log("hello");
       controls.classList.remove("remove-controls");
       cancelBtn.classList.remove("add-cancel-btn");
       // Remove edit form and show book data
@@ -649,11 +864,11 @@ const app = {
   addBooksPageUI: () => {
     // Update title depending on which library has been selected
     let selectedLibrary = JSON.parse(localStorage.getItem("selectedLibrary"));
+
     if (selectedLibrary === null) {
-      console.log("Please add a library first");
+      app.displayAlert("warning", "Please create a library first");
       return;
     }
-
     selectedLibrary = selectedLibrary[0].title;
 
     document.querySelector(".add-books__title").textContent =
