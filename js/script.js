@@ -96,14 +96,29 @@ const app = {
     let library = app.libraries.filter((lib) => lib.name === selectedLibrary);
 
     let df = new DocumentFragment();
-    console.log(library);
     library[0].books.forEach((data, i) => {
       let book = document.createElement("div");
       book.classList.add("book");
       book.id = data.id;
+
+      data.tags = !data.tags ? [] : data.tags;
+
+      let tags = data.tags.map((tag) => {
+        if (tag === "") return "";
+        let span = `<span class="tag">${tag}</span>`;
+        return span;
+      });
+
+      let tagsStr = data.tags.join(",");
+      if (!tagsStr) tagsStr = "";
+
+      let displayNotes = !data.notes ? "display:none" : "display:block";
+
+      let notes = !data.notes ? "" : data.notes;
+
+      let price = !data.price ? "" : data.price;
+
       book.innerHTML = `
-      
-      
       <div class="edit-form">
           <input class="manual-entry-form__input title-input" type="text" name="title" placeholder="Title">
           <input class="manual-entry-form__input author-input" type="text" name="authors" placeholder="Authors">
@@ -118,33 +133,36 @@ const app = {
         <div class="book__info">
         <div class="tag-input-container">
           <small for="tags" class="tag-small">Tags <span>(separate with comma / press enter to save)</small></label>
-          <input class="tag-input" type="text" name="tags" id=${"tag_" + i}>
+          <input class="tag-input" type="text" name="tags" value="${tagsStr}" id=${
+        "tag_" + i
+      }>
         </div>
          <div class="notes-input-container">
             <small for="notes" class="notes-small">Notes (press enter to save)</small>
-            <textarea class="notes-input" type="text" name="notes"></textarea>
+            <textarea class="notes-input" type="text" name="notes" >${notes}</textarea>
          </div> 
         <div class="price-input-container">
           <small for="price" class="price-small">Price (cost or price of item / press enter to save)
           </small>
-          <input class="price-input" type="text" name="price" id=${
-            "price_" + i
-          }>
+          <input class="price-input" type="text" name="price" value='${price}'  id=${
+        "price_" + i
+      }>
         </div> 
         <h4 class="book__title">${data.title}</h4>
         <span class="book__author">${data.author}</span>
         <div class="book__data">
           <span class="book__year">${data.year}</span>
           <span class="book__pages">${data.pages}</span>
-          <span class="book__publisher">(Dial Press Trade Paperback)</span>
+          <span class="book__publisher">${data.publisher}</span>
           <span class="book__isbn13">${data.isbn13}</span>
           <span class="book__isbn10">${data.isbn10}</span>
         </div>
         <div class="price-tag">${!data.price ? "" : "$" + data.price}</div>
         <p class="book__description">${data.description}</p>
-        <div class="tags"></div> 
-        <div class="notes">
+        <div class="tags">${tags.join("")}</div> 
+        <div class="notes" style=${displayNotes}>
           <i class="fas fa-sticky-note" title="Add Notes"></i>
+          ${data.notes}
         </div>
       </div>
     </div>
@@ -165,6 +183,14 @@ const app = {
 
     displayBooksContainer.innerHTML = "";
     displayBooksContainer.append(df);
+
+    // let b = document.querySelectorAll(".book");
+    // library[0].books.forEach((data, i) =>
+    //   b.forEach(
+    //     (book) => (book.querySelector(".tag-input").value = data.tags.join(" "))
+    //   )
+    // );
+
     const bookControls = document.querySelectorAll(".book__controls");
     bookControls.forEach((bookControl) => {
       bookControl.addEventListener("click", (ev) => {
