@@ -48,7 +48,6 @@ const app = {
 
     let df = new DocumentFragment();
 
-    console.log(app.libraries);
     app.libraries.forEach((library) => {
       const option = document.createElement("option");
       option.value = library.name;
@@ -96,29 +95,33 @@ const app = {
     let library = app.libraries.filter((lib) => lib.name === selectedLibrary);
 
     let df = new DocumentFragment();
-    library[0].books.forEach((data, i) => {
-      let book = document.createElement("div");
-      book.classList.add("book");
-      book.id = data.id;
+    let letterSeparator = null;
+    library[0].books
+      .sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1))
+      .forEach((data, i) => {
+        let book = document.createElement("div");
+        book.classList.add("book");
+        book.id = data.id;
+        book.dataset.sort = data.title[0].toUpperCase();
 
-      data.tags = !data.tags ? [] : data.tags;
+        data.tags = !data.tags ? [] : data.tags;
 
-      let tags = data.tags.map((tag) => {
-        if (tag === "") return "";
-        let span = `<span class="tag">${tag}</span>`;
-        return span;
-      });
+        let tags = data.tags.map((tag) => {
+          if (tag === "") return "";
+          let span = `<span class="tag">${tag}</span>`;
+          return span;
+        });
 
-      let tagsStr = data.tags.join(",");
-      if (!tagsStr) tagsStr = "";
+        let tagsStr = data.tags.join(",");
+        if (!tagsStr) tagsStr = "";
 
-      let displayNotes = !data.notes ? "display:none" : "display:block";
+        let displayNotes = !data.notes ? "display:none" : "display:block";
 
-      let notes = !data.notes ? "" : data.notes;
+        let notes = !data.notes ? "" : data.notes;
 
-      let price = !data.price ? "" : data.price;
+        let price = !data.price ? "" : data.price;
 
-      book.innerHTML = `
+        book.innerHTML = `
       <div class="edit-form">
           <input class="manual-entry-form__input title-input" type="text" name="title" placeholder="Title">
           <input class="manual-entry-form__input author-input" type="text" name="authors" placeholder="Authors">
@@ -134,8 +137,8 @@ const app = {
         <div class="tag-input-container">
           <small for="tags" class="tag-small">Tags <span>(separate with comma / press enter to save)</small></label>
           <input class="tag-input" type="text" name="tags" value="${tagsStr}" id=${
-        "tag_" + i
-      }>
+          "tag_" + i
+        }>
         </div>
          <div class="notes-input-container">
             <small for="notes" class="notes-small">Notes (press enter to save)</small>
@@ -145,8 +148,8 @@ const app = {
           <small for="price" class="price-small">Price (cost or price of item / press enter to save)
           </small>
           <input class="price-input" type="text" name="price" value='${price}'  id=${
-        "price_" + i
-      }>
+          "price_" + i
+        }>
         </div> 
         <h4 class="book__title">${data.title}</h4>
         <span class="book__author">${data.author}</span>
@@ -178,18 +181,15 @@ const app = {
       </div>
     </div>`;
 
-      df.append(book);
-    });
+        df.append(book);
+      });
 
     displayBooksContainer.innerHTML = "";
     displayBooksContainer.append(df);
 
-    // let b = document.querySelectorAll(".book");
-    // library[0].books.forEach((data, i) =>
-    //   b.forEach(
-    //     (book) => (book.querySelector(".tag-input").value = data.tags.join(" "))
-    //   )
-    // );
+    app.createLetterSeparators();
+
+    app.filterBooks();
 
     const bookControls = document.querySelectorAll(".book__controls");
     bookControls.forEach((bookControl) => {
@@ -203,6 +203,59 @@ const app = {
           return;
         }
       });
+    });
+  },
+
+  createLetterSeparators: () => {
+    app.libraries[0].books.sort((a, b) => (a.title > b.title ? -1 : 1));
+    let booksDisplay = document.querySelector(".display-books-container");
+    let books = document.querySelectorAll(".book");
+    let letterSeparator = null;
+    books.forEach((book) => {
+      console.log(book.dataset.sort);
+      if (!letterSeparator) {
+        letterSeparator = book.dataset.sort;
+        let separator = document.createElement("div");
+        separator.classList.add("first-letter");
+        separator.textContent = book.dataset.sort;
+        book.parentElement.prepend(separator);
+      }
+      if (letterSeparator === book.dataset.sort) {
+        letterSeparator = letterSeparator;
+      }
+      if (letterSeparator !== book.dataset.sort) {
+        letterSeparator = book.dataset.sort;
+        let separator = document.createElement("div");
+        separator.classList.add("first-letter");
+        separator.textContent = book.dataset.sort;
+        booksDisplay.insertBefore(separator, book);
+      }
+    });
+  },
+
+  filterBooks: () => {
+    let booksDisplay = document.querySelector(".display-books-container");
+    const letters = document.querySelector(".letter_range");
+    let books = document.querySelectorAll(".book");
+    letters.addEventListener("click", (ev) => {
+      if (ev.target.closest("span")) {
+        document.querySelector(".selected").classList.remove("selected");
+        ev.target.classList.add("selected");
+
+        books.forEach((book) => {
+          if (book.dataset.sort !== ev.target.textContent) {
+            book.style.display = "none";
+          }
+          if (book.dataset.sort === ev.target.textContent) {
+            book.style.display = "block";
+          }
+          if (ev.target.textContent === "ALL") {
+            book.style.display = "block";
+          }
+        });
+      } else {
+        return;
+      }
     });
   },
 
