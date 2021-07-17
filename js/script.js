@@ -10,18 +10,33 @@ const app = {
   getSelectedPage: () => {
     let page = document.body.id;
     switch (page) {
+      case "home":
+        app.burgerNav();
+        break;
       case "librariesPage":
+        app.burgerNav();
         app.displayStoredLibraries();
-        // app.displayStoredBooks();
         break;
       case "createLibraryPage":
+        app.burgerNav();
         app.createLibrary();
         break;
       case "addBooksPage":
+        app.burgerNav();
         app.searchBooks();
         app.addBooksPageUI();
         break;
     }
+  },
+
+  burgerNav: () => {
+    const mobileHeader = document.querySelector(".navbar-mobile__header");
+    mobileHeader.addEventListener("click", (ev) => {
+      if (ev.target.closest(".burger")) {
+        const mobileMenu = document.querySelector(".navbar__menu--mobile");
+        mobileMenu.classList.toggle("show-nav");
+      }
+    });
   },
 
   createLibrary: () => {
@@ -95,7 +110,7 @@ const app = {
     let library = app.libraries.filter((lib) => lib.name === selectedLibrary);
 
     let df = new DocumentFragment();
-    let letterSeparator = null;
+
     library[0].books
       .sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1))
       .forEach((data, i) => {
